@@ -4,6 +4,9 @@ import { fileURLToPath, URL } from 'node:url';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  // Relative paths so the built site works under any subpath
+  // (e.g. https://user.github.io/repo-name/) without blank pages.
+  base: './',
   plugins: [react()],
   resolve: {
     alias: {
