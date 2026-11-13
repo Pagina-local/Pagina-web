@@ -93,7 +93,7 @@ export default function CheckoutModal({ open, onClose, deliveryFee, whatsappNumb
 
   const buildWhatsAppText = (): string => {
     const lines: string[] = [];
-    lines.push('*NUEVO PEDIDO - UNIVERSO 22*');
+    lines.push('*NUEVO PEDIDO - URBAN BITES*');
     lines.push('');
     lines.push(`*Modalidad:* ${isDelivery ? 'Domicilio' : 'Recoger en local'}`);
     lines.push('');
@@ -142,16 +142,16 @@ export default function CheckoutModal({ open, onClose, deliveryFee, whatsappNumb
 
   const inputCls = (key: string) =>
     `w-full rounded-xl border bg-white/5 px-3 py-2.5 text-sm text-white placeholder-slate-500 transition focus:outline-none ${
-      errors[key] ? 'border-brand-red/60' : 'border-purple-500/20 focus:border-brand-purple/50'
+      errors[key] ? 'border-brand-red/60' : 'border-white/10 focus:border-brand-red/50'
     }`;
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
       <div className="absolute inset-0 animate-fade-in bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative z-10 flex max-h-[94vh] w-full max-w-lg animate-slide-up flex-col overflow-hidden rounded-t-3xl border border-purple-500/25 bg-slate-900/70 backdrop-blur-xl sm:animate-scale-in sm:rounded-3xl">
+      <div className="relative z-10 flex max-h-[94vh] w-full max-w-lg animate-slide-up flex-col overflow-hidden rounded-t-3xl border border-white/10 bg-base-900 sm:animate-scale-in sm:rounded-3xl">
         {/* Header */}
-        <div className="flex shrink-0 items-center justify-between border-b border-purple-500/25 px-5 py-4">
-          <h2 className="font-display text-2xl tracking-wide text-white text-glow-purple">Finalizar Pedido</h2>
+        <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-5 py-4">
+          <h2 className="font-display text-2xl tracking-wide text-white">Finalizar Pedido</h2>
           <button
             onClick={onClose}
             className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-white transition hover:bg-white/10"
@@ -168,7 +168,7 @@ export default function CheckoutModal({ open, onClose, deliveryFee, whatsappNumb
               <div key={label} className="flex flex-1 items-center gap-1.5">
                 <div
                   className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold transition ${
-                    i <= step ? 'bg-gradient-to-br from-brand-purple to-brand-indigo text-white' : 'bg-white/10 text-slate-400'
+                    i <= step ? 'bg-brand-red text-white' : 'bg-white/10 text-slate-400'
                   }`}
                 >
                   {i + 1}
@@ -176,7 +176,7 @@ export default function CheckoutModal({ open, onClose, deliveryFee, whatsappNumb
                 <span className={`hidden text-xs font-medium sm:block ${i <= step ? 'text-white' : 'text-slate-500'}`}>
                   {label}
                 </span>
-                {i < STEPS.length - 1 && <div className={`h-px flex-1 ${i < step ? 'bg-gradient-to-r from-brand-purple to-brand-indigo' : 'bg-white/10'}`} />}}
+                {i < STEPS.length - 1 && <div className={`h-px flex-1 ${i < step ? 'bg-brand-red' : 'bg-white/10'}`} />}
               </div>
             ))}
           </div>
@@ -238,15 +238,15 @@ export default function CheckoutModal({ open, onClose, deliveryFee, whatsappNumb
                       key={method}
                       onClick={() => setField('paymentMethod', method)}
                       className={`flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition ${
-                        active ? 'border-brand-purple bg-brand-purple/15' : 'border-purple-500/20 bg-white/5 hover:border-brand-purple/40'
+                        active ? 'border-brand-red bg-brand-red/15' : 'border-white/10 bg-white/5 hover:border-white/20'
                       }`}
                     >
-                      <Icon className={`h-5 w-5 ${active ? 'text-brand-purple-light' : 'text-slate-400'}`} />
+                      <Icon className={`h-5 w-5 ${active ? 'text-brand-red-light' : 'text-slate-400'}`} />
                       <div className="flex-1">
                         <p className="text-sm font-semibold text-white">{cfg.label}</p>
                         <p className="text-xs text-slate-400">{cfg.hint}</p>
                       </div>
-                      <span className={`h-4 w-4 rounded-full border-2 ${active ? 'border-brand-purple bg-brand-purple' : 'border-white/30'}`} />
+                      <span className={`h-4 w-4 rounded-full border-2 ${active ? 'border-brand-red bg-brand-red' : 'border-white/30'}`} />
                     </button>
                   );
                 })}
@@ -268,7 +268,7 @@ export default function CheckoutModal({ open, onClose, deliveryFee, whatsappNumb
           {step === 2 && (
             <div className="animate-fade-in space-y-4">
               <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">Resumen del pedido</h3>
-              <div className="space-y-2 rounded-2xl border border-purple-500/20 bg-slate-900/50 backdrop-blur-md p-4">
+              <div className="space-y-2 rounded-2xl border border-white/10 bg-white/5 p-4">
                 {items.map((it) => (
                   <div key={it.lineId} className="flex justify-between gap-2 text-sm">
                     <span className="text-slate-300">
@@ -279,13 +279,13 @@ export default function CheckoutModal({ open, onClose, deliveryFee, whatsappNumb
                   </div>
                 ))}
               </div>
-              <div className="space-y-1.5 rounded-2xl border border-purple-500/20 bg-slate-900/50 backdrop-blur-md p-4 text-sm">
+              <div className="space-y-1.5 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm">
                 <Row label="Subtotal" value={formatCOP(subtotal)} />
                 {isDelivery && <Row label="Domicilio" value={formatCOP(deliveryFee)} />}
-                <div className="my-1 h-px bg-purple-500/20" />
+                <div className="my-1 h-px bg-white/10" />
                 <Row label="Total" value={formatCOP(total)} bold />
               </div>
-              <div className="rounded-2xl border border-purple-500/20 bg-slate-900/50 backdrop-blur-md p-4 text-sm">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm">
                 <Row label="Modalidad" value={isDelivery ? 'Domicilio' : 'Recoger en local'} />
                 <Row label="Nombre" value={details.name || '—'} />
                 <Row label="Teléfono" value={details.phone || '—'} />
@@ -300,11 +300,11 @@ export default function CheckoutModal({ open, onClose, deliveryFee, whatsappNumb
               <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-500/15">
                 <CheckCircle2 className="h-10 w-10 text-green-400" />
               </div>
-              <h3 className="mt-4 font-display text-2xl tracking-wide text-white text-glow-purple">¡Pedido listo!</h3>
+              <h3 className="mt-4 font-display text-2xl tracking-wide text-white">¡Pedido listo!</h3>
               <p className="mt-2 max-w-xs text-sm text-slate-300">
                 Al tocar el botón se abrirá WhatsApp con tu pedido listo para enviar. Confirmá el envío para que lo preparemos.
               </p>
-              <div className="mt-4 w-full rounded-2xl border border-purple-500/20 bg-slate-900/50 backdrop-blur-md p-4 text-left text-sm">
+              <div className="mt-4 w-full rounded-2xl border border-white/10 bg-white/5 p-4 text-left text-sm">
                 <Row label="Total a pagar" value={formatCOP(total)} bold />
                 <Row label="Modalidad" value={isDelivery ? 'Domicilio' : 'Recoger en local'} />
               </div>
@@ -313,12 +313,12 @@ export default function CheckoutModal({ open, onClose, deliveryFee, whatsappNumb
         </div>
 
         {/* Footer */}
-        <div className="shrink-0 border-t border-purple-500/25 bg-base-950/80 px-5 py-4">
+        <div className="shrink-0 border-t border-white/10 bg-base-950/80 px-5 py-4">
           <div className="flex items-center gap-3">
             {step > 0 && (
               <button
                 onClick={back}
-                className="flex h-12 items-center gap-1.5 rounded-full border border-purple-500/25 px-4 text-sm font-semibold text-white transition hover:bg-white/5"
+                className="flex h-12 items-center gap-1.5 rounded-full border border-white/15 px-4 text-sm font-semibold text-white transition hover:bg-white/5"
               >
                 <ArrowLeft className="h-4 w-4" /> Atrás
               </button>
@@ -362,7 +362,7 @@ function DeliveryOption({
         <p className="font-semibold text-white">{title}</p>
         <p className="text-xs text-slate-400">{desc}</p>
       </div>
-      <span className={`h-5 w-5 rounded-full border-2 ${active ? 'border-brand-purple bg-brand-purple' : 'border-white/30'}`} />
+      <span className={`h-5 w-5 rounded-full border-2 ${active ? 'border-brand-red bg-brand-red' : 'border-white/30'}`} />
     </button>
   );
 }

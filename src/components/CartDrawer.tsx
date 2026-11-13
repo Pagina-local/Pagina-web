@@ -29,10 +29,10 @@ export default function CartDrawer({ open, onClose, onCheckout, deliveryFee }: C
   return (
     <div className="fixed inset-0 z-50">
       <div className="absolute inset-0 animate-fade-in bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="absolute right-0 top-0 flex h-full w-full max-w-md animate-slide-in-right flex-col border-l border-purple-500/25 bg-slate-900/70 backdrop-blur-xl shadow-2xl shadow-purple-900/30">
+      <div className="absolute right-0 top-0 flex h-full w-full max-w-md animate-slide-in-right flex-col border-l border-white/10 bg-base-900 shadow-2xl">
         {/* Header */}
-        <div className="flex shrink-0 items-center justify-between border-b border-purple-500/25 px-5 py-4">
-          <h2 className="flex items-center gap-2 font-display text-2xl tracking-wide text-white text-glow-purple">
+        <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-5 py-4">
+          <h2 className="flex items-center gap-2 font-display text-2xl tracking-wide text-white">
             <ShoppingBag className="h-6 w-6 text-brand-mustard" /> Tu Pedido
           </h2>
           <button
@@ -47,7 +47,7 @@ export default function CartDrawer({ open, onClose, onCheckout, deliveryFee }: C
         {/* Items */}
         {items.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
-            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-brand-purple/10 ring-1 ring-brand-purple/20">
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/5">
               <ShoppingBag className="h-9 w-9 text-slate-500" />
             </div>
             <p className="mt-4 font-semibold text-white">Tu carrito está vacío</p>
@@ -64,7 +64,7 @@ export default function CartDrawer({ open, onClose, onCheckout, deliveryFee }: C
             <div className="no-scrollbar flex-1 overflow-y-auto px-4 py-4">
               <ul className="space-y-3">
                 {items.map((item) => (
-                  <li key={item.lineId} className="animate-fade-in rounded-2xl border border-purple-500/20 bg-slate-900/50 backdrop-blur-md p-3">
+                  <li key={item.lineId} className="animate-fade-in rounded-2xl border border-white/10 bg-white/5 p-3">
                     <div className="flex gap-3">
                       <img src={item.image_url} alt={item.name} className="h-16 w-16 shrink-0 rounded-xl object-cover" />
                       <div className="min-w-0 flex-1">
@@ -90,7 +90,7 @@ export default function CartDrawer({ open, onClose, onCheckout, deliveryFee }: C
                           <p className="mt-0.5 text-xs italic text-slate-500">"{item.notes}"</p>
                         )}
                         <div className="mt-2 flex items-center justify-between">
-                          <div className="flex items-center rounded-full border border-purple-500/20 bg-base-950/60">
+                          <div className="flex items-center rounded-full border border-white/10 bg-base-950">
                             <button
                               onClick={() => updateQuantity(item.lineId, item.quantity - 1)}
                               className="flex h-7 w-7 items-center justify-center rounded-full text-white transition hover:bg-white/10"
@@ -117,7 +117,7 @@ export default function CartDrawer({ open, onClose, onCheckout, deliveryFee }: C
             </div>
 
             {/* Summary + checkout */}
-            <div className="shrink-0 space-y-3 border-t border-purple-500/25 bg-base-950/80 px-5 py-4">
+            <div className="shrink-0 space-y-3 border-t border-white/10 bg-base-950/80 px-5 py-4">
               <div className="space-y-1.5 text-sm">
                 <div className="flex justify-between text-slate-300">
                   <span>Subtotal</span>
@@ -127,7 +127,7 @@ export default function CartDrawer({ open, onClose, onCheckout, deliveryFee }: C
                   <span>Domicilio</span>
                   <span className="font-medium text-white">{formatCOP(deliveryFee)}</span>
                 </div>
-                <div className="flex justify-between border-t border-purple-500/20 pt-2 text-base font-bold">
+                <div className="flex justify-between border-t border-white/10 pt-2 text-base font-bold">
                   <span className="text-white">Total</span>
                   <span className="text-brand-mustard-light">{formatCOP(total)}</span>
                 </div>

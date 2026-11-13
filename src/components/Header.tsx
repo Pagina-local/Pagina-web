@@ -1,4 +1,4 @@
-import { Menu, Search, ShoppingCart, Rocket, Star, X } from 'lucide-react';
+import { Menu, Search, ShoppingCart, Flame, Star, X } from 'lucide-react';
 import { useState } from 'react';
 
 interface HeaderProps {
@@ -51,19 +51,19 @@ export default function Header({
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-purple-500/25 bg-base-950/90 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-base-950/90 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:gap-5 sm:px-6 lg:px-8">
         {/* Logo */}
         <button onClick={() => onNavMenu()} className="flex shrink-0 items-center gap-2">
           {logoType === 'image' && logoUrl ? (
             <img src={logoUrl} alt={storeName} className="h-10 w-10 rounded-xl object-cover" />
           ) : (
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-purple to-brand-indigo shadow-lg shadow-brand-purple/30">
-              <Rocket className="h-5 w-5 text-white" strokeWidth={2.5} />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-red to-brand-red-dark shadow-lg shadow-brand-red/30">
+              <Flame className="h-5 w-5 text-white" strokeWidth={2.5} />
             </div>
           )}
           <div className="hidden sm:block text-left leading-none">
-            <span className="block font-display text-xl tracking-wide text-white text-glow-purple">{storeName}</span>
+            <span className="block font-display text-xl tracking-wide text-white">{storeName}</span>
             <span className="block text-[10px] font-medium uppercase tracking-[0.2em] text-brand-mustard">{tagline}</span>
           </div>
         </button>
@@ -76,7 +76,7 @@ export default function Header({
             value={searchQuery}
             onChange={(e) => onSearch(e.target.value)}
             placeholder="Buscar hamburguesa, combo, bebida..."
-            className="w-full rounded-full border border-purple-500/20 bg-white/5 py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-400 transition focus:border-brand-purple/50 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-brand-purple/20"
+            className="w-full rounded-full border border-white/10 bg-white/5 py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-400 transition focus:border-brand-red/50 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-brand-red/20"
           />
         </div>
 
@@ -132,14 +132,14 @@ export default function Header({
             value={searchQuery}
             onChange={(e) => onSearch(e.target.value)}
             placeholder="Buscar producto..."
-            className="w-full rounded-full border border-purple-500/20 bg-white/5 py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-400 focus:border-brand-purple/50 focus:outline-none"
+            className="w-full rounded-full border border-white/10 bg-white/5 py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-400 focus:border-brand-red/50 focus:outline-none"
           />
         </div>
       </div>
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="animate-slide-up border-t border-purple-500/25 bg-slate-900/60 backdrop-blur-md px-4 py-3 lg:hidden">
+        <div className="animate-slide-up border-t border-white/10 bg-base-900 px-4 py-3 lg:hidden">
           <nav className="grid grid-cols-2 gap-1">
             {navLinks.map((link) => (
               <button

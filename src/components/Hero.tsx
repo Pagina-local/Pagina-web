@@ -9,7 +9,7 @@ interface HeroProps {
 
 export default function Hero({ promoTitle, promoSubtitle, promoBadge, onOrder }: HeroProps) {
   return (
-    <section className="relative overflow-hidden border-b border-purple-500/25 bg-stars">
+    <section className="relative overflow-hidden border-b border-white/10">
       {/* Background image */}
       <div className="absolute inset-0">
         <img
@@ -19,7 +19,7 @@ export default function Hero({ promoTitle, promoSubtitle, promoBadge, onOrder }:
           loading="eager"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-base-950 via-base-950/85 to-base-950/40" />
-        <div className="absolute inset-0 bg-nebula opacity-50" />
+        <div className="absolute inset-0 bg-grid opacity-40" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-28">
@@ -30,11 +30,11 @@ export default function Hero({ promoTitle, promoSubtitle, promoBadge, onOrder }:
               {promoBadge}
             </span>
           )}
-          <h1 className="mt-5 font-display text-4xl leading-[1.05] tracking-wide text-white text-glow-purple sm:text-6xl lg:text-7xl">
-            {promoTitle || 'Sabor de otro planeta en Universo 22'}
+          <h1 className="mt-5 font-display text-4xl leading-[1.05] tracking-wide text-white sm:text-6xl lg:text-7xl">
+            {promoTitle || 'Comida rápida que enciende tu día'}
           </h1>
           <p className="mt-4 max-w-xl text-base text-slate-300 sm:text-lg">
-            {promoSubtitle || 'Hamburguesas intergalácticas, salchipapas estelares y combos cósmicos. Pedí por WhatsApp y recibí en tu nave.'}
+            {promoSubtitle || 'Hamburguesas a la parrilla, salchipapas crujientes y combos para compartir. Pedí por WhatsApp y recibí en minutos.'}
           </p>
 
           <div className="mt-7 flex flex-wrap items-center gap-3">
