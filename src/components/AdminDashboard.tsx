@@ -19,7 +19,7 @@ interface AdminDashboardProps {
   onReviewsChange: (reviews: Review[]) => void;
 }
 
-const ADMIN_PASSWORD = 'admin123';
+const ADMIN_PASSWORD = 'UNIVERSO22*';
 
 export default function AdminDashboard({
   open, onClose, products, categories, reviews, onProductsChange, onReviewsChange,
