@@ -10,13 +10,13 @@ interface BottomNavProps {
 
 export default function BottomNav({ cartCount, onMenu, onReviews, onCart, onAdmin }: BottomNavProps) {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-30 border-t border-white/10 bg-base-950/95 backdrop-blur-xl lg:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 z-30 border-t border-purple-500/20 bg-base-950/95 backdrop-blur-xl lg:hidden">
       <div className="mx-auto flex max-w-md items-center justify-around px-2 py-1.5">
         <NavBtn icon={Home} label="Menú" onClick={onMenu} />
         <NavBtn icon={Star} label="Reseñas" onClick={onReviews} />
         <button
           onClick={onCart}
-          className="relative flex -mt-4 h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-brand-red to-brand-red-dark text-white shadow-lg shadow-brand-red/40 transition active:scale-95"
+          className="relative flex -mt-4 h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-brand-red to-brand-red-dark text-white shadow-lg shadow-brand-red/40 ring-2 ring-purple-500/20 transition active:scale-95"
           aria-label="Carrito"
         >
           <ShoppingCart className="h-6 w-6" />
