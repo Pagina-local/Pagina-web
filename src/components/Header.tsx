@@ -1,4 +1,4 @@
-import { Menu, Search, ShoppingCart, Flame, Star, X } from 'lucide-react';
+import { Menu, Search, ShoppingCart, Star, X } from 'lucide-react';
 import { useState } from 'react';
 
 interface HeaderProps {
@@ -56,11 +56,9 @@ export default function Header({
         {/* Logo */}
         <button onClick={() => onNavMenu()} className="flex shrink-0 items-center gap-2">
           {logoType === 'image' && logoUrl ? (
-            <img src={logoUrl} alt={storeName} className="h-10 w-10 rounded-xl object-cover" />
+            <img src={logoUrl} alt={storeName} className="h-12 w-12 shrink-0 rounded-full object-contain" />
           ) : (
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-purple to-brand-red shadow-neon-purple">
-              <Flame className="h-5 w-5 text-white" strokeWidth={2.5} />
-            </div>
+            <img src="/image.png" alt={storeName} className="h-12 w-12 shrink-0 rounded-full object-contain" />
           )}
           <div className="hidden sm:block text-left leading-none">
             <span className="text-glow-purple block font-display text-xl tracking-wider text-white">{storeName}</span>

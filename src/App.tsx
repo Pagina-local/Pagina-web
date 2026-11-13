@@ -248,11 +248,9 @@ function Footer({ settings }: { settings: StoreSettings | null }) {
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2">
               {logoType === 'image' && logoUrl ? (
-                <img src={logoUrl} alt={storeName} className="h-10 w-10 rounded-xl object-cover" />
+                <img src={logoUrl} alt={storeName} className="h-12 w-12 shrink-0 rounded-full object-contain" />
               ) : (
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-red to-brand-red-dark">
-                  <Truck className="h-5 w-5 text-white" />
-                </div>
+                <img src="/image.png" alt={storeName} className="h-12 w-12 shrink-0 rounded-full object-contain" />
               )}
               <div>
                 <p className="font-display text-xl tracking-wide text-white">{storeName}</p>
