@@ -1,4 +1,4 @@
-import { ArrowRight, Clock, Truck } from 'lucide-react';
+import { ArrowRight, Clock, Rocket, Sparkles, Star } from 'lucide-react';
 
 interface HeroProps {
   promoTitle: string;
@@ -9,32 +9,44 @@ interface HeroProps {
 
 export default function Hero({ promoTitle, promoSubtitle, promoBadge, onOrder }: HeroProps) {
   return (
-    <section className="relative overflow-hidden border-b border-white/10">
-      {/* Background image */}
+    <section className="relative overflow-hidden border-b border-purple-500/20">
+      {/* Cosmic background */}
       <div className="absolute inset-0">
         <img
-          src="https://images.pexels.com/photos/18111567/pexels-photo-18111567.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"
+          src="https://images.pexels.com/photos/20881655/pexels-photo-20881655.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"
           alt=""
-          className="h-full w-full object-cover opacity-30"
+          className="h-full w-full object-cover opacity-25"
           loading="eager"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-base-950 via-base-950/85 to-base-950/40" />
-        <div className="absolute inset-0 bg-grid opacity-40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-base-950 via-base-950/80 to-base-950/30" />
+        <div className="absolute inset-0 bg-stars opacity-50" />
+        <div className="absolute inset-0 bg-nebula" />
+      </div>
+
+      {/* Floating decorative stars */}
+      <div className="pointer-events-none absolute right-[8%] top-[20%] hidden md:block">
+        <Star className="h-6 w-6 fill-brand-mustard text-brand-mustard animate-twinkle" />
+      </div>
+      <div className="pointer-events-none absolute right-[22%] top-[60%] hidden md:block">
+        <Star className="h-4 w-4 fill-brand-purple text-brand-purple animate-twinkle [animation-delay:1s]" />
+      </div>
+      <div className="pointer-events-none absolute right-[12%] bottom-[18%] hidden lg:block">
+        <Rocket className="h-10 w-10 text-brand-purple-light/40 animate-float" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-28">
         <div className="max-w-2xl">
           {promoBadge && (
-            <span className="inline-flex animate-bounce-in items-center gap-2 rounded-full bg-brand-mustard/15 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-brand-mustard-light ring-1 ring-brand-mustard/30">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-brand-mustard" />
+            <span className="inline-flex animate-bounce-in items-center gap-2 rounded-full bg-brand-purple/20 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-brand-purple-light ring-1 ring-brand-purple/40">
+              <Sparkles className="h-3.5 w-3.5" />
               {promoBadge}
             </span>
           )}
-          <h1 className="mt-5 font-display text-4xl leading-[1.05] tracking-wide text-white sm:text-6xl lg:text-7xl">
-            {promoTitle || 'Comida rápida que enciende tu día'}
+          <h1 className="mt-5 font-display text-4xl leading-[1.05] tracking-wide text-white text-glow-purple sm:text-6xl lg:text-7xl">
+            {promoTitle || 'Sabor de otro planeta'}
           </h1>
           <p className="mt-4 max-w-xl text-base text-slate-300 sm:text-lg">
-            {promoSubtitle || 'Hamburguesas a la parrilla, salchipapas crujientes y combos para compartir. Pedí por WhatsApp y recibí en minutos.'}
+            {promoSubtitle || 'Comida cósmica entregada directamente a tu nave. Pedí por WhatsApp.'}
           </p>
 
           <div className="mt-7 flex flex-wrap items-center gap-3">
@@ -47,8 +59,8 @@ export default function Hero({ promoTitle, promoSubtitle, promoBadge, onOrder }:
             </button>
             <div className="flex items-center gap-4 text-xs text-slate-300">
               <span className="inline-flex items-center gap-1.5">
-                <Truck className="h-4 w-4 text-brand-mustard" />
-                Domicilio rápido
+                <Rocket className="h-4 w-4 text-brand-mustard" />
+                Domicilio intergaláctico
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <Clock className="h-4 w-4 text-brand-mustard" />
