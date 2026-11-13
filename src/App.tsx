@@ -250,7 +250,7 @@ function Footer({ settings }: { settings: StoreSettings | null }) {
               {logoType === 'image' && logoUrl ? (
                 <img src={logoUrl} alt={storeName} className="h-12 w-12 shrink-0 rounded-full object-contain" />
               ) : (
-                <img src="/image.png" alt={storeName} className="h-12 w-12 shrink-0 rounded-full object-contain" />
+                <img src="/IG.png" alt={storeName} className="h-12 w-12 shrink-0 rounded-full object-contain" />
               )}
               <div>
                 <p className="font-display text-xl tracking-wide text-white">{storeName}</p>
