@@ -19,7 +19,7 @@ export default function ProductGrid({ products, categories, searchQuery, onProdu
     );
     if (filtered.length === 0) {
       return (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-base-900 py-16 text-center">
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-purple-500/25 bg-slate-900/60 backdrop-blur-md py-16 text-center">
           <SearchX className="h-10 w-10 text-slate-500" />
           <p className="mt-3 font-semibold text-white">Sin resultados para "{searchQuery}"</p>
           <p className="mt-1 text-sm text-slate-400">Probá con otro nombre o categoría.</p>
@@ -49,7 +49,7 @@ export default function ProductGrid({ products, categories, searchQuery, onProdu
               <span className="rounded-full bg-white/5 px-2.5 py-0.5 text-xs font-semibold text-slate-400">
                 {items.length}
               </span>
-              <div className="ml-1 h-px flex-1 bg-gradient-to-r from-white/15 to-transparent" />
+              <div className="ml-1 h-px flex-1 bg-gradient-to-r from-purple-500/30 to-transparent" />
             </div>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
               {items.map((p) => (

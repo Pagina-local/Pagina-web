@@ -74,7 +74,7 @@ function StoreApp() {
 
   // Sync browser tab title with store name
   useEffect(() => {
-    const name = settings?.store_name ?? 'Urban Bites';
+    const name = settings?.store_name ?? 'Universo 22';
     document.title = `${name} — Comida Rápida a Domicilio`;
   }, [settings?.store_name]);
 
@@ -107,8 +107,8 @@ function StoreApp() {
         onNavReviews={scrollToReviews}
         onNavMenu={scrollToMenu}
         onNavAdmin={() => setAdminOpen(true)}
-        storeName={settings?.store_name ?? 'URBAN BITES'}
-        tagline={settings?.tagline ?? 'Fast & Furious Food'}
+        storeName={settings?.store_name ?? 'UNIVERSO 22'}
+        tagline={settings?.tagline ?? 'Sabor de otro planeta'}
         logoUrl={settings?.logo_url ?? ''}
         logoType={settings?.logo_type ?? 'icon'}
       />
@@ -150,7 +150,7 @@ function StoreApp() {
               onProductClick={setDetailProduct}
             />
 
-            <div className="my-16 h-px bg-white/10" />
+            <div className="my-16 h-px bg-purple-500/15" />
 
             <ReviewsSection
               reviews={reviews}
@@ -207,7 +207,7 @@ function LoadingState() {
     <div className="space-y-8">
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="overflow-hidden rounded-2xl border border-white/10 bg-base-900">
+          <div key={i} className="overflow-hidden rounded-2xl border border-purple-500/25 bg-slate-900/60 backdrop-blur-md">
             <div className="aspect-square animate-pulse bg-white/5" />
             <div className="space-y-2 p-4">
               <div className="h-4 w-3/4 animate-pulse rounded bg-white/5" />
@@ -223,7 +223,7 @@ function LoadingState() {
 
 function ErrorState({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-base-900 py-16 text-center">
+    <div className="flex flex-col items-center justify-center rounded-2xl border border-purple-500/25 bg-slate-900/60 backdrop-blur-md py-16 text-center">
       <p className="font-semibold text-white">No pudimos cargar el menú</p>
       <p className="mt-1 text-sm text-slate-400">{message}</p>
       <button
@@ -237,12 +237,12 @@ function ErrorState({ message, onRetry }: { message: string; onRetry: () => void
 }
 
 function Footer({ settings }: { settings: StoreSettings | null }) {
-  const storeName = settings?.store_name ?? 'URBAN BITES';
-  const tagline = settings?.tagline ?? 'Fast & Furious Food';
+  const storeName = settings?.store_name ?? 'UNIVERSO 22';
+  const tagline = settings?.tagline ?? 'Sabor de otro planeta';
   const logoUrl = settings?.logo_url ?? '';
   const logoType = settings?.logo_type ?? 'icon';
   return (
-    <footer className="border-t border-white/10 bg-base-900">
+    <footer className="border-t border-purple-500/25 bg-slate-900/60 backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-2">
@@ -260,7 +260,7 @@ function Footer({ settings }: { settings: StoreSettings | null }) {
               </div>
             </div>
             <p className="mt-4 max-w-sm text-sm text-slate-400">
-              Comida rápida urbana hecha con ingredientes frescos. Hamburguesas a la parrilla, salchipapas crujientes y combos para compartir.
+              Sabor de otro planeta: hamburguesas intergalácticas, salchipapas estelares y combos cósmicos. Pedí por WhatsApp y recibí en tu nave.
             </p>
             <div className="mt-5 flex gap-3">
               <a href="#" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-slate-300 transition hover:bg-white/10 hover:text-white" aria-label="Instagram">
@@ -292,7 +292,7 @@ function Footer({ settings }: { settings: StoreSettings | null }) {
           </div>
         </div>
 
-        <div className="mt-10 border-t border-white/10 pt-6 text-center text-xs text-slate-500">
+        <div className="mt-10 border-t border-purple-500/15 pt-6 text-center text-xs text-slate-500">
           © {new Date().getFullYear()} {storeName}. Todos los derechos reservados.
         </div>
       </div>

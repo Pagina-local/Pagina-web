@@ -142,8 +142,8 @@ export default function ReviewsSection({ reviews, onNewReview }: ReviewsSectionP
       </div>
 
       {/* Rating summary */}
-      <div className="mb-8 grid gap-4 rounded-2xl border border-white/10 bg-base-900 p-6 sm:grid-cols-[auto_1fr] sm:items-center">
-        <div className="flex flex-col items-center justify-center border-white/10 sm:border-r sm:pr-8">
+      <div className="mb-8 grid gap-4 rounded-2xl border border-purple-500/25 bg-slate-900/60 backdrop-blur-md p-6 sm:grid-cols-[auto_1fr] sm:items-center">
+        <div className="flex flex-col items-center justify-center border-purple-500/20 sm:border-r sm:pr-8">
           <span className="font-display text-6xl text-brand-mustard">{avg.toFixed(1)}</span>
           <StarRow value={Math.round(avg)} />
           <span className="mt-1 text-xs text-slate-400">{approvedReviews.length} reseñas</span>
@@ -169,9 +169,9 @@ export default function ReviewsSection({ reviews, onNewReview }: ReviewsSectionP
 
       <div className="grid gap-8 lg:grid-cols-[380px_1fr]">
         {/* Form */}
-        <div className="h-fit rounded-2xl border border-white/10 bg-base-900 p-6">
-          <h3 className="flex items-center gap-2 font-display text-xl tracking-wide text-white">
-            <ThumbsUp className="h-5 w-5 text-brand-mustard" /> Dejar una Reseña
+        <div className="h-fit rounded-2xl border border-purple-500/25 bg-slate-900/60 backdrop-blur-md p-6">
+          <h3 className="flex items-center gap-2 font-display text-xl tracking-wide text-white text-glow-purple">
+            <ThumbsUp className="h-5 w-5 text-brand-purple-light" /> Dejar una Reseña
           </h3>
           <p className="mt-1 text-xs text-slate-400">Contanos cómo estuvo tu pedido.</p>
 
@@ -182,7 +182,7 @@ export default function ReviewsSection({ reviews, onNewReview }: ReviewsSectionP
                 value={form.name}
                 onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                 placeholder="Tu nombre"
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder-slate-500 focus:border-brand-red/50 focus:outline-none"
+                className="w-full rounded-xl border border-purple-500/20 bg-white/5 px-3 py-2.5 text-sm text-white placeholder-slate-500 focus:border-brand-purple/50 focus:outline-none"
               />
             </div>
 
@@ -217,14 +217,14 @@ export default function ReviewsSection({ reviews, onNewReview }: ReviewsSectionP
                 onChange={(e) => setForm((f) => ({ ...f, comment: e.target.value }))}
                 rows={3}
                 placeholder="Contanos tu experiencia..."
-                className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder-slate-500 focus:border-brand-red/50 focus:outline-none"
+                className="w-full resize-none rounded-xl border border-purple-500/20 bg-white/5 px-3 py-2.5 text-sm text-white placeholder-slate-500 focus:border-brand-purple/50 focus:outline-none"
               />
             </div>
 
             <div>
               <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-400">Foto del pedido (opcional)</label>
               {form.imageDataUrl ? (
-                <div className="relative overflow-hidden rounded-xl border border-white/10">
+                <div className="relative overflow-hidden rounded-xl border border-purple-500/20">
                   <img src={form.imageDataUrl} alt="Vista previa" className="h-32 w-full object-cover" />
                   <button
                     onClick={() => setForm((f) => ({ ...f, imageDataUrl: null }))}
@@ -234,7 +234,7 @@ export default function ReviewsSection({ reviews, onNewReview }: ReviewsSectionP
                   </button>
                 </div>
               ) : (
-                <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-white/20 bg-white/5 px-3 py-5 text-center transition hover:border-brand-mustard/50 hover:bg-white/10">
+                <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-purple-500/25 bg-white/5 px-3 py-5 text-center transition hover:border-brand-purple/50 hover:bg-white/10">
                   <ImagePlus className="h-7 w-7 text-slate-400" />
                   <span className="mt-2 text-xs text-slate-400">Subir foto (máx. 4MB)</span>
                   <input
@@ -257,7 +257,7 @@ export default function ReviewsSection({ reviews, onNewReview }: ReviewsSectionP
             <button
               onClick={submit}
               disabled={submitting}
-              className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-br from-brand-mustard to-brand-mustard-dark px-5 py-3 text-sm font-bold text-base-950 shadow-lg shadow-brand-mustard/20 transition hover:scale-[1.02] active:scale-95 disabled:opacity-60"
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-br from-brand-purple to-brand-indigo px-5 py-3 text-sm font-bold text-white shadow-lg shadow-brand-purple/30 transition hover:scale-[1.02] active:scale-95 disabled:opacity-60"
             >
               {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
               Publicar Reseña
@@ -288,13 +288,13 @@ export default function ReviewsSection({ reviews, onNewReview }: ReviewsSectionP
           </div>
 
           {filtered.length === 0 ? (
-            <div className="rounded-2xl border border-white/10 bg-base-900 py-12 text-center text-sm text-slate-400">
+            <div className="rounded-2xl border border-purple-500/20 bg-slate-900/60 backdrop-blur-md py-12 text-center text-sm text-slate-400">
               No hay reseñas con esta calificación todavía.
             </div>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2">
               {filtered.map((r) => (
-                <article key={r.id} className="animate-fade-in rounded-2xl border border-white/10 bg-base-900 p-5">
+                <article key={r.id} className="animate-fade-in rounded-2xl border border-purple-500/25 bg-slate-900/60 backdrop-blur-md p-5">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="font-semibold text-white">{r.customer_name}</p>
@@ -306,7 +306,7 @@ export default function ReviewsSection({ reviews, onNewReview }: ReviewsSectionP
                   {r.image_url && (
                     <button
                       onClick={() => setLightbox(r.image_url)}
-                      className="mt-3 overflow-hidden rounded-xl border border-white/10 transition hover:opacity-80"
+                      className="mt-3 overflow-hidden rounded-xl border border-purple-500/20 transition hover:opacity-80"
                     >
                       <img src={r.image_url} alt="Foto del cliente" className="h-40 w-full object-cover" loading="lazy" />
                     </button>

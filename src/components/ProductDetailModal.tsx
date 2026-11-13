@@ -98,11 +98,11 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center" role="dialog" aria-modal="true">
       <div className="absolute inset-0 animate-fade-in bg-black/70 backdrop-blur-sm" onClick={onClose} />
 
-      <div className="relative z-10 flex max-h-[92vh] w-full max-w-2xl animate-slide-up flex-col overflow-hidden rounded-t-3xl border border-white/10 bg-base-900 sm:animate-scale-in sm:rounded-3xl">
+      <div className="relative z-10 flex max-h-[92vh] w-full max-w-2xl animate-slide-up flex-col overflow-hidden rounded-t-3xl border border-purple-500/25 bg-slate-900/70 backdrop-blur-xl sm:animate-scale-in sm:rounded-3xl">
         {/* Image */}
         <div className="relative h-48 shrink-0 overflow-hidden sm:h-64">
           <img src={product.image_url} alt={product.name} className="h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-base-900 via-base-900/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/30 to-transparent" />
           <button
             onClick={onClose}
             className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition hover:bg-black/70"
@@ -114,7 +114,7 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
 
         {/* Body (scroll) */}
         <div className="no-scrollbar flex-1 overflow-y-auto px-5 pb-4 pt-3 sm:px-7">
-          <h2 className="font-display text-3xl tracking-wide text-white">{product.name}</h2>
+          <h2 className="font-display text-3xl tracking-wide text-white text-glow-purple">{product.name}</h2>
           <p className="mt-1.5 text-sm text-slate-400">{product.description}</p>
 
           {/* Variations */}
@@ -130,8 +130,8 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
                       onClick={() => setVariationId(v.id)}
                       className={`flex items-center justify-between rounded-xl border px-3 py-3 text-left transition ${
                         active
-                          ? 'border-brand-red bg-brand-red/15'
-                          : 'border-white/10 bg-white/5 hover:border-white/20'
+                          ? 'border-brand-purple bg-brand-purple/15'
+                          : 'border-purple-500/20 bg-white/5 hover:border-brand-purple/40'
                       }`}
                     >
                       <span className="text-sm font-semibold text-white">{v.name}</span>
@@ -157,7 +157,7 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
                     <div
                       key={extra.id}
                       className={`flex items-center justify-between rounded-xl border px-3 py-2.5 transition ${
-                        selected ? 'border-brand-mustard/40 bg-brand-mustard/10' : 'border-white/10 bg-white/5'
+                        selected ? 'border-brand-mustard/40 bg-brand-mustard/10' : 'border-purple-500/20 bg-white/5'
                       }`}
                     >
                       <button onClick={() => toggleExtra(extra)} className="flex flex-1 items-center gap-3 text-left">
@@ -203,15 +203,15 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
               onChange={(e) => setNotes(e.target.value)}
               rows={2}
               placeholder="Ej: sin cebolla, salsa aparte, término de la carne..."
-              className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder-slate-500 transition focus:border-brand-red/50 focus:outline-none"
+              className="w-full resize-none rounded-xl border border-purple-500/20 bg-white/5 px-3 py-2.5 text-sm text-white placeholder-slate-500 transition focus:border-brand-purple/50 focus:outline-none"
             />
           </div>
         </div>
 
         {/* Footer */}
-        <div className="shrink-0 border-t border-white/10 bg-base-900/95 px-5 py-4 sm:px-7">
+        <div className="shrink-0 border-t border-purple-500/25 bg-slate-900/70 backdrop-blur-xl px-5 py-4 sm:px-7">
           <div className="flex items-center gap-4">
-            <div className="flex items-center rounded-full border border-white/15 bg-white/5">
+            <div className="flex items-center rounded-full border border-purple-500/25 bg-white/5">
               <button
                 onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                 className="flex h-10 w-10 items-center justify-center rounded-full text-white transition hover:bg-white/10"
