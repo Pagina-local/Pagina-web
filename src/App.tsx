@@ -16,7 +16,7 @@ import CheckoutModal from '@/components/CheckoutModal';
 import AdminDashboard from '@/components/AdminDashboard';
 import BottomNav from '@/components/BottomNav';
 import Toast from '@/components/Toast';
-import { Rocket, Instagram, Facebook, Clock, MapPin, MessageCircle } from 'lucide-react';
+import { Truck, Instagram, Facebook, Clock, MapPin, MessageCircle } from 'lucide-react';
 
 function StoreApp() {
   const { totalItems } = useCart();
@@ -74,8 +74,8 @@ function StoreApp() {
 
   // Sync browser tab title with store name
   useEffect(() => {
-    const name = settings?.store_name ?? 'Universo 22';
-    document.title = `${name} — Sabor de otro planeta`;
+    const name = settings?.store_name ?? 'Urban Bites';
+    document.title = `${name} — Comida Rápida a Domicilio`;
   }, [settings?.store_name]);
 
   const scrollToMenu = useCallback(() => {
@@ -98,7 +98,7 @@ function StoreApp() {
   const whatsappNumber = settings?.whatsapp_number ?? '573001112233';
 
   return (
-    <div className="min-h-screen pb-20 lg:pb-0">
+    <div className="min-h-screen bg-base-950 pb-20 lg:pb-0">
       <Header
         cartCount={totalItems}
         onCartClick={() => setCartOpen(true)}
@@ -150,7 +150,7 @@ function StoreApp() {
               onProductClick={setDetailProduct}
             />
 
-            <div className="my-16 h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent" />
+            <div className="my-16 h-px bg-white/10" />
 
             <ReviewsSection
               reviews={reviews}
@@ -223,7 +223,7 @@ function LoadingState() {
 
 function ErrorState({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border border-purple-500/20 bg-slate-900/70 backdrop-blur-md py-16 text-center">
+    <div className="flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-base-900 py-16 text-center">
       <p className="font-semibold text-white">No pudimos cargar el menú</p>
       <p className="mt-1 text-sm text-slate-400">{message}</p>
       <button
@@ -237,12 +237,12 @@ function ErrorState({ message, onRetry }: { message: string; onRetry: () => void
 }
 
 function Footer({ settings }: { settings: StoreSettings | null }) {
-  const storeName = settings?.store_name ?? 'Universo 22';
-  const tagline = settings?.tagline ?? 'Sabor de otro planeta';
+  const storeName = settings?.store_name ?? 'URBAN BITES';
+  const tagline = settings?.tagline ?? 'Fast & Furious Food';
   const logoUrl = settings?.logo_url ?? '';
   const logoType = settings?.logo_type ?? 'icon';
   return (
-    <footer className="border-t border-purple-500/20 bg-base-900/80">
+    <footer className="border-t border-white/10 bg-base-900">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-2">
@@ -250,26 +250,26 @@ function Footer({ settings }: { settings: StoreSettings | null }) {
               {logoType === 'image' && logoUrl ? (
                 <img src={logoUrl} alt={storeName} className="h-10 w-10 rounded-xl object-cover" />
               ) : (
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-purple to-brand-indigo shadow-lg shadow-brand-purple/30">
-                  <Rocket className="h-5 w-5 text-white" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-red to-brand-red-dark">
+                  <Truck className="h-5 w-5 text-white" />
                 </div>
               )}
               <div>
-                <p className="font-display text-xl tracking-wide text-white text-glow-purple">{storeName}</p>
-                <p className="text-[10px] uppercase tracking-[0.2em] text-brand-purple-light">{tagline}</p>
+                <p className="font-display text-xl tracking-wide text-white">{storeName}</p>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-brand-mustard">{tagline}</p>
               </div>
             </div>
             <p className="mt-4 max-w-sm text-sm text-slate-400">
-              Sabor de otro planeta. Hamburguesas intergalácticas, salchipapas estelares y combos cósmicos para compartir en toda la galaxia.
+              Comida rápida urbana hecha con ingredientes frescos. Hamburguesas a la parrilla, salchipapas crujientes y combos para compartir.
             </p>
             <div className="mt-5 flex gap-3">
-              <a href="#" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-slate-300 transition hover:bg-brand-purple/15 hover:text-white" aria-label="Instagram">
+              <a href="#" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-slate-300 transition hover:bg-white/10 hover:text-white" aria-label="Instagram">
                 <Instagram className="h-4 w-4" />
               </a>
-              <a href="#" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-slate-300 transition hover:bg-brand-purple/15 hover:text-white" aria-label="Facebook">
+              <a href="#" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-slate-300 transition hover:bg-white/10 hover:text-white" aria-label="Facebook">
                 <Facebook className="h-4 w-4" />
               </a>
-              <a href="#" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-slate-300 transition hover:bg-brand-purple/15 hover:text-white" aria-label="WhatsApp">
+              <a href="#" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-slate-300 transition hover:bg-white/10 hover:text-white" aria-label="WhatsApp">
                 <MessageCircle className="h-4 w-4" />
               </a>
             </div>
@@ -292,7 +292,7 @@ function Footer({ settings }: { settings: StoreSettings | null }) {
           </div>
         </div>
 
-        <div className="mt-10 border-t border-purple-500/20 pt-6 text-center text-xs text-slate-500">
+        <div className="mt-10 border-t border-white/10 pt-6 text-center text-xs text-slate-500">
           © {new Date().getFullYear()} {storeName}. Todos los derechos reservados.
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { Menu, Search, ShoppingCart, Rocket, Star, X } from 'lucide-react';
+import { Menu, Search, ShoppingCart, Flame, Star, X } from 'lucide-react';
 import { useState } from 'react';
 
 interface HeaderProps {
@@ -51,20 +51,20 @@ export default function Header({
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-purple-500/20 bg-base-950/90 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-base-950/90 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:gap-5 sm:px-6 lg:px-8">
         {/* Logo */}
         <button onClick={() => onNavMenu()} className="flex shrink-0 items-center gap-2">
           {logoType === 'image' && logoUrl ? (
             <img src={logoUrl} alt={storeName} className="h-10 w-10 rounded-xl object-cover" />
           ) : (
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-purple to-brand-indigo shadow-lg shadow-brand-purple/30">
-              <Rocket className="h-5 w-5 text-white" strokeWidth={2.5} />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-red to-brand-red-dark shadow-lg shadow-brand-red/30">
+              <Flame className="h-5 w-5 text-white" strokeWidth={2.5} />
             </div>
           )}
           <div className="hidden sm:block text-left leading-none">
             <span className="block font-display text-xl tracking-wide text-white">{storeName}</span>
-            <span className="block text-[10px] font-medium uppercase tracking-[0.2em] text-brand-purple-light">{tagline}</span>
+            <span className="block text-[10px] font-medium uppercase tracking-[0.2em] text-brand-mustard">{tagline}</span>
           </div>
         </button>
 
@@ -99,9 +99,7 @@ export default function Header({
             onClick={onNavAdmin}
             className="hidden rounded-lg px-3 py-2 text-sm font-medium text-slate-400 transition hover:bg-white/5 hover:text-white sm:block"
           >
-            <span className="flex items-center gap-1.5">
-              <Star className="h-3.5 w-3.5" /> Admin
-            </span>
+            Admin
           </button>
           <button
             onClick={onCartClick}

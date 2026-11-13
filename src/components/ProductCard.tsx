@@ -12,7 +12,7 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
     <button
       onClick={() => onClick(product)}
       disabled={!product.available}
-      className="group relative flex flex-col overflow-hidden rounded-2xl border border-purple-500/20 bg-slate-900/70 backdrop-blur-md text-left transition duration-300 glow-border-hover disabled:cursor-not-allowed disabled:opacity-50"
+      className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-base-900 text-left transition duration-300 hover:border-white/20 hover:shadow-2xl hover:shadow-black/40 disabled:cursor-not-allowed disabled:opacity-50"
     >
       <div className="relative aspect-square overflow-hidden">
         <img
@@ -21,9 +21,9 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
           loading="lazy"
           className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-base-900/80 via-transparent to-transparent" />
         {product.variations.length > 0 && (
-          <span className="absolute left-3 top-3 rounded-full bg-brand-purple/30 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-brand-purple-light backdrop-blur-sm ring-1 ring-brand-purple/30">
+          <span className="absolute left-3 top-3 rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-white backdrop-blur-sm">
             {product.variations.length} tamaños
           </span>
         )}
@@ -38,7 +38,7 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
         <h3 className="font-semibold leading-snug text-white">{product.name}</h3>
         <p className="mt-1 line-clamp-2 flex-1 text-xs text-slate-400">{product.description}</p>
         <div className="mt-3 flex items-center justify-between">
-          <span className="rounded-lg bg-brand-mustard/15 px-2.5 py-1 text-sm font-bold text-brand-mustard-light text-glow-gold">
+          <span className="rounded-lg bg-brand-mustard/15 px-2.5 py-1 text-sm font-bold text-brand-mustard-light">
             {formatCOP(product.base_price)}
           </span>
           <span

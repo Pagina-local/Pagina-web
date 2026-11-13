@@ -87,14 +87,14 @@ export default function SettingsTab({ settings, onSettingsChange }: SettingsTabP
     setWhatsappNumber(original.whatsapp_number);
   };
 
-  const inputCls = 'w-full rounded-xl border border-purple-500/20 bg-white/5 px-3 py-2.5 text-sm text-white placeholder-slate-500 transition focus:border-brand-purple/50 focus:outline-none';
+  const inputCls = 'w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder-slate-500 transition focus:border-brand-mustard/50 focus:outline-none';
 
   return (
     <div className="animate-fade-in space-y-6">
       {/* Branding card */}
-      <div className="rounded-2xl border border-purple-500/25 bg-slate-900/60 backdrop-blur-md p-5">
-        <h3 className="flex items-center gap-2 font-display text-lg tracking-wide text-white text-glow-purple">
-          <Store className="h-5 w-5 text-brand-purple-light" /> Identidad del Local
+      <div className="rounded-2xl border border-white/10 bg-base-900 p-5">
+        <h3 className="flex items-center gap-2 font-display text-lg tracking-wide text-white">
+          <Store className="h-5 w-5 text-brand-mustard" /> Identidad del Local
         </h3>
         <p className="mt-1 text-xs text-slate-400">Estos datos aparecen en el encabezado, el banner y el pie de página.</p>
 
@@ -104,7 +104,7 @@ export default function SettingsTab({ settings, onSettingsChange }: SettingsTabP
             <label className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-400">
               <Type className="h-3.5 w-3.5" /> Nombre del local
             </label>
-            <input value={storeName} onChange={(e) => setStoreName(e.target.value)} className={inputCls} placeholder="Ej: Universo 22" />
+            <input value={storeName} onChange={(e) => setStoreName(e.target.value)} className={inputCls} placeholder="Ej: Urban Bites" />
           </div>
 
           {/* Tagline */}
@@ -112,7 +112,7 @@ export default function SettingsTab({ settings, onSettingsChange }: SettingsTabP
             <label className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-400">
               <Sparkles className="h-3.5 w-3.5" /> Subtítulo / Eslogan
             </label>
-            <input value={tagline} onChange={(e) => setTagline(e.target.value)} className={inputCls} placeholder="Ej: Sabor de otro planeta" />
+            <input value={tagline} onChange={(e) => setTagline(e.target.value)} className={inputCls} placeholder="Ej: Fast & Furious Food" />
           </div>
 
           {/* Logo */}
@@ -124,15 +124,15 @@ export default function SettingsTab({ settings, onSettingsChange }: SettingsTabP
               <button
                 onClick={() => setLogoType('icon')}
                 className={`flex-1 rounded-xl border px-3 py-2.5 text-xs font-semibold transition ${
-                  logoType === 'icon' ? 'border-brand-purple bg-brand-purple/15 text-brand-purple-light' : 'border-purple-500/20 bg-white/5 text-slate-300 hover:bg-white/10'
+                  logoType === 'icon' ? 'border-brand-mustard bg-brand-mustard/15 text-brand-mustard-light' : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'
                 }`}
               >
-                Ícono (Cohete)
+                Ícono (Flama)
               </button>
               <button
                 onClick={() => setLogoType('image')}
                 className={`flex-1 rounded-xl border px-3 py-2.5 text-xs font-semibold transition ${
-                  logoType === 'image' ? 'border-brand-purple bg-brand-purple/15 text-brand-purple-light' : 'border-purple-500/20 bg-white/5 text-slate-300 hover:bg-white/10'
+                  logoType === 'image' ? 'border-brand-mustard bg-brand-mustard/15 text-brand-mustard-light' : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'
                 }`}
               >
                 Imagen propia
@@ -141,7 +141,7 @@ export default function SettingsTab({ settings, onSettingsChange }: SettingsTabP
 
             {logoType === 'image' && (
               <div className="mt-3 flex gap-3">
-                <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-purple-500/20 bg-white/5">
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white/5">
                   {logoUrl ? (
                     <img src={logoUrl} alt="Logo" className="h-full w-full object-cover" />
                   ) : (
@@ -155,7 +155,7 @@ export default function SettingsTab({ settings, onSettingsChange }: SettingsTabP
                     placeholder="https://... (URL del logo)"
                     className={inputCls}
                   />
-                  <label className="flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-purple-500/25 bg-white/5 px-3 py-2 text-xs font-medium text-slate-300 transition hover:border-brand-purple/50 hover:bg-white/10">
+                  <label className="flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-white/20 bg-white/5 px-3 py-2 text-xs font-medium text-slate-300 transition hover:border-brand-mustard/50 hover:bg-white/10">
                     {uploading ? (
                       <><Loader2 className="h-4 w-4 animate-spin" /> Subiendo...</>
                     ) : (
@@ -177,9 +177,9 @@ export default function SettingsTab({ settings, onSettingsChange }: SettingsTabP
       </div>
 
       {/* Contact card */}
-      <div className="rounded-2xl border border-purple-500/25 bg-slate-900/60 backdrop-blur-md p-5">
-        <h3 className="flex items-center gap-2 font-display text-lg tracking-wide text-white text-glow-purple">
-          <Phone className="h-5 w-5 text-brand-purple-light" /> Contacto y Pedidos
+      <div className="rounded-2xl border border-white/10 bg-base-900 p-5">
+        <h3 className="flex items-center gap-2 font-display text-lg tracking-wide text-white">
+          <Phone className="h-5 w-5 text-brand-mustard" /> Contacto y Pedidos
         </h3>
         <p className="mt-1 text-xs text-slate-400">Número de WhatsApp al que se envían los pedidos confirmados.</p>
         <div className="mt-4">
@@ -208,13 +208,13 @@ export default function SettingsTab({ settings, onSettingsChange }: SettingsTabP
       <div className="flex items-center gap-3">
         <button
           onClick={handleReset}
-          className="flex items-center gap-1.5 rounded-full border border-purple-500/25 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/5"
+          className="flex items-center gap-1.5 rounded-full border border-white/15 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/5"
         >
           <RotateCcw className="h-4 w-4" /> Restaurar
         </button>
         <button
           onClick={handleSave}
-          className="flex flex-1 items-center justify-center gap-2 rounded-full bg-gradient-to-br from-brand-purple to-brand-indigo px-5 py-3 text-sm font-bold text-white shadow-lg shadow-brand-purple/30 transition hover:scale-[1.02] active:scale-95"
+          className="flex flex-1 items-center justify-center gap-2 rounded-full bg-gradient-to-br from-brand-mustard to-brand-mustard-dark px-5 py-3 text-sm font-bold text-base-950 shadow-lg shadow-brand-mustard/20 transition hover:scale-[1.02] active:scale-95"
         >
           {saved ? <Check className="h-5 w-5" /> : <Save className="h-5 w-5" />}
           {saved ? '¡Guardado!' : 'Guardar Configuración'}

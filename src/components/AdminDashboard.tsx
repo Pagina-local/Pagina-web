@@ -8,9 +8,6 @@ import { supabase } from '@/lib/supabase';
 import { formatCOP, formatDate } from '@/lib/utils';
 import { saveProductEdit, resetAllOverrides } from '@/lib/productStore';
 import ProductEditModal from './ProductEditModal';
-import SettingsTab from './SettingsTab';
-import type { StoreSettings } from '@/types';
-import { Store } from 'lucide-react';
 
 interface AdminDashboardProps {
   open: boolean;
@@ -18,22 +15,20 @@ interface AdminDashboardProps {
   products: Product[];
   categories: Category[];
   reviews: Review[];
-  settings: StoreSettings | null;
   onProductsChange: (products: Product[]) => void;
   onReviewsChange: (reviews: Review[]) => void;
-  onSettingsChange: (settings: StoreSettings) => void;
 }
 
 const ADMIN_PASSWORD = 'admin123';
 
 export default function AdminDashboard({
-  open, onClose, products, categories, reviews, settings, onProductsChange, onReviewsChange, onSettingsChange,
+  open, onClose, products, categories, reviews, onProductsChange, onReviewsChange,
 }: AdminDashboardProps) {
   const [authed, setAuthed] = useState(false);
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [authError, setAuthError] = useState(false);
-  const [tab, setTab] = useState<'products' | 'reviews' | 'settings'>('products');
+  const [tab, setTab] = useState<'products' | 'reviews'>('products');
   const [search, setSearch] = useState('');
   const [busy, setBusy] = useState<string | null>(null);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -121,20 +116,20 @@ export default function AdminDashboard({
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-base-950">
       {/* Top bar */}
-      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-purple-500/20 bg-base-950/95 px-5 py-4 backdrop-blur-xl">
+      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-white/10 bg-base-950/95 px-5 py-4 backdrop-blur-xl">
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-brand-purple to-brand-indigo text-white shadow-lg shadow-brand-purple/30">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-brand-mustard to-brand-mustard-dark text-base-950">
             <Package className="h-5 w-5" strokeWidth={2.5} />
           </div>
           <div>
-            <h2 className="font-display text-xl tracking-wide text-white text-glow-purple">Panel de Administración</h2>
-            <p className="text-xs text-slate-400">Universo 22 — gestión de tienda</p>
+            <h2 className="font-display text-xl tracking-wide text-white">Panel de Administración</h2>
+            <p className="text-xs text-slate-400">Urban Bites — gestión de tienda</p>
           </div>
         </div>
         {authed && (
           <button
             onClick={() => { setAuthed(false); onClose(); }}
-            className="flex items-center gap-1.5 rounded-full border border-purple-500/25 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/5"
+            className="flex items-center gap-1.5 rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/5"
           >
             <LogOut className="h-4 w-4" /> Salir
           </button>
@@ -144,9 +139,9 @@ export default function AdminDashboard({
       {!authed ? (
         /* Login */
         <div className="flex min-h-[calc(100vh-64px)] items-center justify-center px-5">
-          <div className="w-full max-w-sm rounded-3xl border border-purple-500/25 bg-slate-900/70 backdrop-blur-md p-8 animate-scale-in">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-purple/15 ring-1 ring-brand-purple/30">
-              <Lock className="h-7 w-7 text-brand-purple-light" />
+          <div className="w-full max-w-sm rounded-3xl border border-white/10 bg-base-900 p-8 animate-scale-in">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-mustard/15">
+              <Lock className="h-7 w-7 text-brand-mustard" />
             </div>
             <h3 className="mt-4 text-center font-display text-2xl tracking-wide text-white">Acceso restringido</h3>
             <p className="mt-1 text-center text-sm text-slate-400">Ingresá la contraseña de administrador.</p>
@@ -159,7 +154,7 @@ export default function AdminDashboard({
                   onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
                   placeholder="Contraseña"
                   className={`w-full rounded-xl border bg-white/5 px-4 py-3 pr-11 text-sm text-white placeholder-slate-500 focus:outline-none ${
-                    authError ? 'border-brand-red/60' : 'border-purple-500/20 focus:border-brand-purple/50'
+                    authError ? 'border-brand-red/60' : 'border-white/10 focus:border-brand-mustard/50'
                   }`}
                 />
                 <button
@@ -190,10 +185,9 @@ export default function AdminDashboard({
         /* Dashboard */
         <div className="mx-auto max-w-5xl px-5 py-6">
           {/* Tabs */}
-          <div className="mb-6 flex gap-2 rounded-2xl border border-purple-500/20 bg-slate-900/60 backdrop-blur-md p-1.5">
+          <div className="mb-6 flex gap-2 rounded-2xl border border-white/10 bg-base-900 p-1.5">
             <TabBtn active={tab === 'products'} onClick={() => setTab('products')} icon={Package} label={`Productos (${products.length})`} />
             <TabBtn active={tab === 'reviews'} onClick={() => setTab('reviews')} icon={MessageSquare} label={`Reseñas (${reviews.length})`} />
-            <TabBtn active={tab === 'settings'} onClick={() => setTab('settings')} icon={Store} label="Configuración" />
           </div>
 
           {tab === 'products' && (
@@ -205,12 +199,12 @@ export default function AdminDashboard({
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Buscar producto..."
-                    className="w-full rounded-xl border border-purple-500/20 bg-white/5 py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:border-brand-purple/50 focus:outline-none"
+                    className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:border-brand-mustard/50 focus:outline-none"
                   />
                 </div>
                 <button
                   onClick={handleResetAll}
-                  className="flex shrink-0 items-center justify-center gap-1.5 rounded-xl border border-purple-500/20 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white"
+                  className="flex shrink-0 items-center justify-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white"
                 >
                   <RotateCcw className="h-4 w-4" /> Restaurar
                 </button>
@@ -224,7 +218,7 @@ export default function AdminDashboard({
 
               <div className="space-y-2">
                 {filteredProducts.map((p) => (
-                  <div key={p.id} className="flex flex-wrap items-center gap-3 rounded-2xl border border-purple-500/20 bg-slate-900/60 backdrop-blur-md p-3 sm:flex-nowrap">
+                  <div key={p.id} className="flex flex-wrap items-center gap-3 rounded-2xl border border-white/10 bg-base-900 p-3 sm:flex-nowrap">
                     <img src={p.image_url} alt={p.name} className="h-14 w-14 shrink-0 rounded-xl object-cover" />
                     <div className="min-w-0 flex-1">
                       <p className="truncate font-semibold text-white">{p.name}</p>
@@ -259,12 +253,12 @@ export default function AdminDashboard({
           {tab === 'reviews' && (
             <div className="animate-fade-in space-y-3">
               {reviews.length === 0 && (
-                <p className="rounded-2xl border border-purple-500/20 bg-slate-900/60 backdrop-blur-md py-12 text-center text-sm text-slate-400">
+                <p className="rounded-2xl border border-white/10 bg-base-900 py-12 text-center text-sm text-slate-400">
                   No hay reseñas todavía.
                 </p>
               )}
               {reviews.map((r) => (
-                <div key={r.id} className="rounded-2xl border border-purple-500/20 bg-slate-900/60 backdrop-blur-md p-4">
+                <div key={r.id} className="rounded-2xl border border-white/10 bg-base-900 p-4">
                   <div className="flex items-start gap-3">
                     {r.image_url && (
                       <img src={r.image_url} alt="" className="h-16 w-16 shrink-0 rounded-xl object-cover" />
@@ -314,10 +308,6 @@ export default function AdminDashboard({
               ))}
             </div>
           )}
-
-          {tab === 'settings' && settings && (
-            <SettingsTab settings={settings} onSettingsChange={onSettingsChange} />
-          )}
         </div>
       )}
 
@@ -341,7 +331,7 @@ function TabBtn({
     <button
       onClick={onClick}
       className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold transition ${
-        active ? 'bg-brand-purple/20 text-brand-purple-light' : 'text-slate-400 hover:text-white'
+        active ? 'bg-white/10 text-white' : 'text-slate-400 hover:text-white'
       }`}
     >
       <Icon className="h-4 w-4" /> {label}

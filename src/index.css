@@ -9,16 +9,11 @@ html {
 }
 
 body {
-  background-color: #070510;
+  background-color: #0F172A;
   color: #F1F5F9;
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  background-image:
-    radial-gradient(ellipse 80% 60% at 20% 0%, rgba(124, 58, 237, 0.12), transparent),
-    radial-gradient(ellipse 70% 50% at 80% 20%, rgba(99, 102, 241, 0.10), transparent),
-    radial-gradient(ellipse 60% 40% at 50% 80%, rgba(244, 63, 94, 0.06), transparent);
-  background-attachment: fixed;
 }
 
 ::-webkit-scrollbar {
@@ -26,14 +21,14 @@ body {
   height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #070510;
+  background: #0F172A;
 }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #7C3AED, #4F46E5);
+  background: #334155;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #A855F7, #6366F1);
+  background: #475569;
 }
 
 @layer utilities {
@@ -47,54 +42,8 @@ body {
   .text-balance {
     text-wrap: balance;
   }
-
-  /* Starfield background — tiny twinkling dots */
-  .bg-stars {
-    background-image:
-      radial-gradient(1px 1px at 25% 15%, rgba(255, 255, 255, 0.6), transparent),
-      radial-gradient(1px 1px at 60% 35%, rgba(255, 255, 255, 0.4), transparent),
-      radial-gradient(1px 1px at 85% 65%, rgba(255, 255, 255, 0.5), transparent),
-      radial-gradient(1.5px 1.5px at 45% 80%, rgba(196, 181, 253, 0.4), transparent),
-      radial-gradient(1px 1px at 15% 55%, rgba(255, 255, 255, 0.3), transparent),
-      radial-gradient(1px 1px at 75% 10%, rgba(255, 255, 255, 0.5), transparent),
-      radial-gradient(1.5px 1.5px at 35% 45%, rgba(196, 181, 253, 0.3), transparent),
-      radial-gradient(1px 1px at 90% 85%, rgba(255, 255, 255, 0.4), transparent),
-      radial-gradient(1px 1px at 5% 90%, rgba(255, 255, 255, 0.3), transparent),
-      radial-gradient(1px 1px at 55% 95%, rgba(196, 181, 253, 0.3), transparent);
-    background-size: 400px 400px;
-    background-repeat: repeat;
-  }
-
-  /* Cosmic nebula gradient overlay */
-  .bg-nebula {
-    background-image:
-      radial-gradient(ellipse 50% 40% at 15% 20%, rgba(124, 58, 237, 0.18), transparent),
-      radial-gradient(ellipse 60% 50% at 85% 30%, rgba(99, 102, 241, 0.14), transparent),
-      radial-gradient(ellipse 40% 35% at 50% 70%, rgba(244, 63, 94, 0.08), transparent);
-  }
-
-  /* Glassmorphism card */
-  .glass {
-    background: rgba(11, 9, 26, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(168, 85, 247, 0.2);
-  }
-
-  /* Glowing text */
-  .text-glow-purple {
-    text-shadow: 0 0 20px rgba(168, 85, 247, 0.5), 0 0 40px rgba(124, 58, 237, 0.3);
-  }
-  .text-glow-gold {
-    text-shadow: 0 0 16px rgba(250, 204, 21, 0.4), 0 0 32px rgba(234, 179, 8, 0.2);
-  }
-
-  /* Glowing border on hover */
-  .glow-border-hover {
-    transition: box-shadow 0.3s ease, border-color 0.3s ease;
-  }
-  .glow-border-hover:hover {
-    border-color: rgba(168, 85, 247, 0.5);
-    box-shadow: 0 0 24px rgba(168, 85, 247, 0.2), 0 8px 32px rgba(99, 102, 241, 0.15);
+  .bg-grid {
+    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.06) 1px, transparent 0);
+    background-size: 28px 28px;
   }
 }
