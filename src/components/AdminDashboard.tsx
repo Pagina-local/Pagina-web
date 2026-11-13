@@ -8,6 +8,9 @@ import { supabase } from '@/lib/supabase';
 import { formatCOP, formatDate } from '@/lib/utils';
 import { saveProductEdit, resetAllOverrides } from '@/lib/productStore';
 import ProductEditModal from './ProductEditModal';
+import SettingsTab from './SettingsTab';
+import type { StoreSettings } from '@/types';
+import { Store } from 'lucide-react';
 
 interface AdminDashboardProps {
   open: boolean;
@@ -15,20 +18,22 @@ interface AdminDashboardProps {
   products: Product[];
   categories: Category[];
   reviews: Review[];
+  settings: StoreSettings | null;
   onProductsChange: (products: Product[]) => void;
   onReviewsChange: (reviews: Review[]) => void;
+  onSettingsChange: (settings: StoreSettings) => void;
 }
 
 const ADMIN_PASSWORD = 'admin123';
 
 export default function AdminDashboard({
-  open, onClose, products, categories, reviews, onProductsChange, onReviewsChange,
+  open, onClose, products, categories, reviews, settings, onProductsChange, onReviewsChange, onSettingsChange,
 }: AdminDashboardProps) {
   const [authed, setAuthed] = useState(false);
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [authError, setAuthError] = useState(false);
-  const [tab, setTab] = useState<'products' | 'reviews'>('products');
+  const [tab, setTab] = useState<'products' | 'reviews' | 'settings'>('products');
   const [search, setSearch] = useState('');
   const [busy, setBusy] = useState<string | null>(null);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -188,6 +193,7 @@ export default function AdminDashboard({
           <div className="mb-6 flex gap-2 rounded-2xl border border-purple-500/20 bg-slate-900/60 backdrop-blur-md p-1.5">
             <TabBtn active={tab === 'products'} onClick={() => setTab('products')} icon={Package} label={`Productos (${products.length})`} />
             <TabBtn active={tab === 'reviews'} onClick={() => setTab('reviews')} icon={MessageSquare} label={`Reseñas (${reviews.length})`} />
+            <TabBtn active={tab === 'settings'} onClick={() => setTab('settings')} icon={Store} label="Configuración" />
           </div>
 
           {tab === 'products' && (
@@ -307,6 +313,10 @@ export default function AdminDashboard({
                 </div>
               ))}
             </div>
+          )}
+
+          {tab === 'settings' && settings && (
+            <SettingsTab settings={settings} onSettingsChange={onSettingsChange} />
           )}
         </div>
       )}
