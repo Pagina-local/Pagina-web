@@ -93,7 +93,7 @@ export default function CheckoutModal({ open, onClose, deliveryFee, whatsappNumb
 
   const buildWhatsAppText = (): string => {
     const lines: string[] = [];
-    lines.push('*NUEVO PEDIDO - URBAN BITES*');
+    lines.push('*NUEVO PEDIDO - UNIVERSO 22*');
     lines.push('');
     lines.push(`*Modalidad:* ${isDelivery ? 'Domicilio' : 'Recoger en local'}`);
     lines.push('');
@@ -142,15 +142,15 @@ export default function CheckoutModal({ open, onClose, deliveryFee, whatsappNumb
 
   const inputCls = (key: string) =>
     `w-full rounded-xl border bg-white/5 px-3 py-2.5 text-sm text-white placeholder-slate-500 transition focus:outline-none ${
-      errors[key] ? 'border-brand-red/60' : 'border-white/10 focus:border-brand-red/50'
+      errors[key] ? 'border-brand-red/60' : 'border-purple-500/25 focus:border-brand-red/50'
     }`;
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
       <div className="absolute inset-0 animate-fade-in bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative z-10 flex max-h-[94vh] w-full max-w-lg animate-slide-up flex-col overflow-hidden rounded-t-3xl border border-white/10 bg-base-900 sm:animate-scale-in sm:rounded-3xl">
+      <div className="relative z-10 flex max-h-[94vh] w-full max-w-lg animate-slide-up flex-col overflow-hidden rounded-t-3xl border border-purple-500/25 bg-base-900 sm:animate-scale-in sm:rounded-3xl">
         {/* Header */}
-        <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-5 py-4">
+        <div className="flex shrink-0 items-center justify-between border-b border-purple-500/25 px-5 py-4">
           <h2 className="font-display text-2xl tracking-wide text-white">Finalizar Pedido</h2>
           <button
             onClick={onClose}
@@ -238,7 +238,7 @@ export default function CheckoutModal({ open, onClose, deliveryFee, whatsappNumb
                       key={method}
                       onClick={() => setField('paymentMethod', method)}
                       className={`flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition ${
-                        active ? 'border-brand-red bg-brand-red/15' : 'border-white/10 bg-white/5 hover:border-white/20'
+                        active ? 'border-brand-red bg-brand-red/15' : 'border-purple-500/25 bg-white/5 hover:border-white/20'
                       }`}
                     >
                       <Icon className={`h-5 w-5 ${active ? 'text-brand-red-light' : 'text-slate-400'}`} />
@@ -268,7 +268,7 @@ export default function CheckoutModal({ open, onClose, deliveryFee, whatsappNumb
           {step === 2 && (
             <div className="animate-fade-in space-y-4">
               <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">Resumen del pedido</h3>
-              <div className="space-y-2 rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div className="space-y-2 rounded-2xl border border-purple-500/25 bg-white/5 p-4">
                 {items.map((it) => (
                   <div key={it.lineId} className="flex justify-between gap-2 text-sm">
                     <span className="text-slate-300">
@@ -279,13 +279,13 @@ export default function CheckoutModal({ open, onClose, deliveryFee, whatsappNumb
                   </div>
                 ))}
               </div>
-              <div className="space-y-1.5 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm">
+              <div className="space-y-1.5 rounded-2xl border border-purple-500/25 bg-white/5 p-4 text-sm">
                 <Row label="Subtotal" value={formatCOP(subtotal)} />
                 {isDelivery && <Row label="Domicilio" value={formatCOP(deliveryFee)} />}
                 <div className="my-1 h-px bg-white/10" />
                 <Row label="Total" value={formatCOP(total)} bold />
               </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm">
+              <div className="rounded-2xl border border-purple-500/25 bg-white/5 p-4 text-sm">
                 <Row label="Modalidad" value={isDelivery ? 'Domicilio' : 'Recoger en local'} />
                 <Row label="Nombre" value={details.name || '—'} />
                 <Row label="Teléfono" value={details.phone || '—'} />
@@ -304,7 +304,7 @@ export default function CheckoutModal({ open, onClose, deliveryFee, whatsappNumb
               <p className="mt-2 max-w-xs text-sm text-slate-300">
                 Al tocar el botón se abrirá WhatsApp con tu pedido listo para enviar. Confirmá el envío para que lo preparemos.
               </p>
-              <div className="mt-4 w-full rounded-2xl border border-white/10 bg-white/5 p-4 text-left text-sm">
+              <div className="mt-4 w-full rounded-2xl border border-purple-500/25 bg-white/5 p-4 text-left text-sm">
                 <Row label="Total a pagar" value={formatCOP(total)} bold />
                 <Row label="Modalidad" value={isDelivery ? 'Domicilio' : 'Recoger en local'} />
               </div>
@@ -313,7 +313,7 @@ export default function CheckoutModal({ open, onClose, deliveryFee, whatsappNumb
         </div>
 
         {/* Footer */}
-        <div className="shrink-0 border-t border-white/10 bg-base-950/80 px-5 py-4">
+        <div className="shrink-0 border-t border-purple-500/25 bg-base-950/80 px-5 py-4">
           <div className="flex items-center gap-3">
             {step > 0 && (
               <button
@@ -354,7 +354,7 @@ function DeliveryOption({
     <button
       onClick={onClick}
       className={`flex w-full items-center gap-4 rounded-2xl border px-5 py-4 text-left transition ${
-        active ? 'border-brand-red bg-brand-red/15' : 'border-white/10 bg-white/5 hover:border-white/20'
+        active ? 'border-brand-red bg-brand-red/15' : 'border-purple-500/25 bg-white/5 hover:border-white/20'
       }`}
     >
       <Icon className={`h-6 w-6 ${active ? 'text-brand-red-light' : 'text-slate-400'}`} />

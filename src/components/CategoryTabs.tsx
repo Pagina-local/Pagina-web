@@ -8,7 +8,7 @@ interface CategoryTabsProps {
 
 export default function CategoryTabs({ categories, activeSlug, onSelect }: CategoryTabsProps) {
   return (
-    <div className="sticky top-16 z-30 -mx-4 border-y border-white/10 bg-base-950/90 px-4 py-3 backdrop-blur-xl sm:mx-0 sm:rounded-2xl sm:border sm:px-3">
+    <div className="sticky top-16 z-30 -mx-4 border-y border-purple-500/25 bg-base-950/90 px-4 py-3 backdrop-blur-xl sm:mx-0 sm:rounded-2xl sm:border sm:px-3">
       <div className="no-scrollbar flex gap-2 overflow-x-auto">
         {categories.map((cat) => {
           const active = cat.slug === activeSlug;

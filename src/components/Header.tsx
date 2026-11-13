@@ -51,19 +51,19 @@ export default function Header({
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-base-950/90 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-purple-500/25 bg-base-950/85 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:gap-5 sm:px-6 lg:px-8">
         {/* Logo */}
         <button onClick={() => onNavMenu()} className="flex shrink-0 items-center gap-2">
           {logoType === 'image' && logoUrl ? (
             <img src={logoUrl} alt={storeName} className="h-10 w-10 rounded-xl object-cover" />
           ) : (
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-red to-brand-red-dark shadow-lg shadow-brand-red/30">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-purple to-brand-red shadow-neon-purple">
               <Flame className="h-5 w-5 text-white" strokeWidth={2.5} />
             </div>
           )}
           <div className="hidden sm:block text-left leading-none">
-            <span className="block font-display text-xl tracking-wide text-white">{storeName}</span>
+            <span className="text-glow-purple block font-display text-xl tracking-wider text-white">{storeName}</span>
             <span className="block text-[10px] font-medium uppercase tracking-[0.2em] text-brand-mustard">{tagline}</span>
           </div>
         </button>

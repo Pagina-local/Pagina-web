@@ -224,8 +224,8 @@ export const fallbackSettings: StoreSettings = {
   promo_title: 'Combo del Día: 2x1 en Combos Clásicos',
   promo_subtitle: 'Solo por hoy, llevá dos combos al precio de uno. ¡Pedí antes de las 9pm!',
   promo_badge: 'PROMO HOY',
-  store_name: 'URBAN BITES',
-  tagline: 'Fast & Furious Food',
+  store_name: 'UNIVERSO 22',
+  tagline: 'Sabor de otro planeta',
   logo_url: '',
   logo_type: 'icon',
 };

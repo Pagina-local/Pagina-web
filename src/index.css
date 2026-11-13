@@ -9,7 +9,12 @@ html {
 }
 
 body {
-  background-color: #0F172A;
+  background-color: #03020A;
+  background-image:
+    radial-gradient(ellipse at 15% 0%, rgba(124, 58, 237, 0.22), transparent 55%),
+    radial-gradient(ellipse at 85% 10%, rgba(217, 70, 239, 0.14), transparent 50%),
+    radial-gradient(ellipse at 50% 100%, rgba(56, 189, 248, 0.12), transparent 60%);
+  background-attachment: fixed;
   color: #F1F5F9;
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -21,14 +26,11 @@ body {
   height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #0F172A;
+  background: #03020A;
 }
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: linear-gradient(#A855F7, #6366F1);
   border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #475569;
 }
 
 @layer utilities {
@@ -42,8 +44,37 @@ body {
   .text-balance {
     text-wrap: balance;
   }
-  .bg-grid {
-    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.06) 1px, transparent 0);
-    background-size: 28px 28px;
+  .bg-stars {
+    background-image:
+      radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+      radial-gradient(1px 1px at 120px 90px, #E9D5FF, transparent),
+      radial-gradient(1.5px 1.5px at 200px 40px, #BAE6FD, transparent),
+      radial-gradient(1px 1px at 260px 150px, #fff, transparent),
+      radial-gradient(1px 1px at 60px 170px, #F5D0FE, transparent);
+    background-size: 300px 200px;
+  }
+  .bg-nebula {
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(168, 85, 247, 0.35), transparent 45%),
+      radial-gradient(circle at 80% 70%, rgba(217, 70, 239, 0.25), transparent 50%),
+      radial-gradient(circle at 60% 10%, rgba(56, 189, 248, 0.2), transparent 40%);
+  }
+  .glass {
+    background: rgba(10, 12, 34, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .text-glow-purple {
+    text-shadow: 0 0 18px rgba(168, 85, 247, 0.7), 0 0 36px rgba(217, 70, 239, 0.35);
+  }
+  .text-glow-gold {
+    text-shadow: 0 0 14px rgba(56, 189, 248, 0.6);
+  }
+  .glow-border-hover {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .glow-border-hover:hover {
+    border-color: rgba(168, 85, 247, 0.6);
+    box-shadow: 0 0 24px -6px rgba(168, 85, 247, 0.5);
   }
 }

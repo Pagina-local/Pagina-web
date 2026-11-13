@@ -10,7 +10,7 @@ interface BottomNavProps {
 
 export default function BottomNav({ cartCount, onMenu, onReviews, onCart, onAdmin }: BottomNavProps) {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-30 border-t border-white/10 bg-base-950/95 backdrop-blur-xl lg:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 z-30 border-t border-purple-500/25 bg-base-950/95 backdrop-blur-xl lg:hidden">
       <div className="mx-auto flex max-w-md items-center justify-around px-2 py-1.5">
         <NavBtn icon={Home} label="Menú" onClick={onMenu} />
         <NavBtn icon={Star} label="Reseñas" onClick={onReviews} />
