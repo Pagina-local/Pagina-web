@@ -36,6 +36,7 @@ function StoreApp() {
   const [toast, setToast] = useState<string | null>(null);
 
   const loadData = useCallback(async () => {
+    if (!supabase) return;
     try {
       const [catRes, prodRes, revRes, setRes] = await Promise.all([
         supabase.from('categories').select('*').order('sort_order'),
