@@ -29,6 +29,8 @@ function StoreApp() {
   const [settings, setSettings] = useState<StoreSettings | null>(getMergedSettings);
   const [promotion, setPromotion] = useState<Promotion>(getPromotion);
   const [promotionOpen, setPromotionOpen] = useState(false);
+  const [promotionHandled, setPromotionHandled] = useState(false);
+  const [promotionSuppressed, setPromotionSuppressed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -78,16 +80,23 @@ function StoreApp() {
 
   useEffect(() => { loadData(); }, [loadData]);
 
+  const promotionProduct = products.find((product) => product.id === promotion.productId);
+
   useEffect(() => {
-    if (!promotion.active || promotionOpen) return;
+    if (!promotion.active || promotionOpen || promotionHandled || promotionSuppressed || adminOpen || !promotionProduct) return;
+    const promotionKey = `fastfood_promotion_seen_v1_${promotion.productId}_${promotion.title}_${promotion.promotionalPrice}`;
     try {
-      if (sessionStorage.getItem('fastfood_promotion_seen_v1')) return;
-      sessionStorage.setItem('fastfood_promotion_seen_v1', 'true');
+      if (sessionStorage.getItem(promotionKey)) {
+        setPromotionHandled(true);
+        return;
+      }
+      sessionStorage.setItem(promotionKey, 'true');
     } catch {
-      // Continue showing the promotion when session storage is unavailable.
+      // The local state still prevents repeated displays in this page visit.
     }
+    setPromotionHandled(true);
     setPromotionOpen(true);
-  }, [promotion.active, promotionOpen]);
+  }, [promotion.active, promotion.productId, promotion.title, promotion.promotionalPrice, promotionOpen, promotionHandled, promotionSuppressed, adminOpen, promotionProduct]);
 
   // Sync browser tab title with store name
   useEffect(() => {
@@ -109,6 +118,11 @@ function StoreApp() {
 
   const handleCheckoutComplete = useCallback(() => {
     setToast('¡Pedido enviado por WhatsApp! Te contactaremos pronto.');
+  }, []);
+
+  const handlePromotionChange = useCallback((next: Promotion) => {
+    setPromotion(next);
+    setPromotionSuppressed(next.active);
   }, []);
 
   const deliveryFee = settings?.delivery_fee ?? 5000;
@@ -181,10 +195,10 @@ function StoreApp() {
 
       {/* Overlays */}
       <ProductDetailModal product={detailProduct} onClose={() => setDetailProduct(null)} />
-      {promotionOpen && promotion.active && products.some((product) => product.id === promotion.productId) && (
+      {promotionOpen && promotion.active && promotionProduct && (
         <PromotionModal
           promotion={promotion}
-          product={products.find((product) => product.id === promotion.productId)!}
+          product={promotionProduct}
           onClose={() => setPromotionOpen(false)}
           onAdded={() => setToast('¡Promoción agregada al carrito!')}
         />
@@ -211,7 +225,7 @@ function StoreApp() {
         promotion={promotion}
         onProductsChange={setProducts}
         onReviewsChange={setReviews}
-        onPromotionChange={setPromotion}
+        onPromotionChange={handlePromotionChange}
       />
 
       <BottomNav

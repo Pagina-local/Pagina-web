@@ -42,12 +42,12 @@ export default function PromotionModal({ promotion, product, onClose, onAdded }:
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="promotion-title">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto p-4" role="dialog" aria-modal="true" aria-labelledby="promotion-title">
       <div className="absolute inset-0 animate-fade-in bg-black/75 backdrop-blur-md" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-lg animate-scale-in overflow-hidden rounded-3xl border border-purple-400/40 bg-base-900 shadow-2xl shadow-purple-950/60">
+      <div className="relative z-10 my-auto max-h-[calc(100dvh-2rem)] w-full max-w-lg animate-scale-in overflow-y-auto rounded-3xl border border-purple-400/40 bg-base-900 shadow-2xl shadow-purple-950/60">
         <div className="absolute -left-20 -top-24 h-56 w-56 rounded-full bg-purple-500/25 blur-3xl" />
         <div className="absolute -bottom-24 -right-12 h-56 w-56 rounded-full bg-cyan-400/15 blur-3xl" />
-        <div className="relative h-56 overflow-hidden sm:h-64">
+        <div className="relative h-48 shrink-0 overflow-hidden sm:h-64">
           <img src={imageUrl} alt={product.name} className="h-full w-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-base-900 via-base-900/20 to-transparent" />
           <div className="absolute left-5 top-5 flex items-center gap-2 rounded-full border border-brand-mustard/40 bg-base-950/70 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-brand-mustard-light backdrop-blur-sm">
