@@ -3,11 +3,12 @@ import {
   Lock, LogOut, Eye, EyeOff, Trash2, Star, Package, MessageSquare, Check, X, Search,
   Pencil, Save, ImagePlus, RotateCcw, Loader2, Tag, DollarSign, FileText, FolderTree,
 } from 'lucide-react';
-import type { Product, Review, Category } from '@/types';
+import type { Product, Review, Category, Promotion } from '@/types';
 import { supabase } from '@/lib/supabase';
 import { formatCOP, formatDate } from '@/lib/utils';
 import { saveProductEdit, resetAllOverrides } from '@/lib/productStore';
 import ProductEditModal from './ProductEditModal';
+import PromotionTab from './PromotionTab';
 
 interface AdminDashboardProps {
   open: boolean;
@@ -15,20 +16,22 @@ interface AdminDashboardProps {
   products: Product[];
   categories: Category[];
   reviews: Review[];
+  promotion: Promotion;
   onProductsChange: (products: Product[]) => void;
   onReviewsChange: (reviews: Review[]) => void;
+  onPromotionChange: (promotion: Promotion) => void;
 }
 
 const ADMIN_PASSWORD = 'UNIVERSO22*';
 
 export default function AdminDashboard({
-  open, onClose, products, categories, reviews, onProductsChange, onReviewsChange,
+  open, onClose, products, categories, reviews, promotion, onProductsChange, onReviewsChange, onPromotionChange,
 }: AdminDashboardProps) {
   const [authed, setAuthed] = useState(false);
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [authError, setAuthError] = useState(false);
-  const [tab, setTab] = useState<'products' | 'reviews'>('products');
+  const [tab, setTab] = useState<'products' | 'reviews' | 'promotions'>('products');
   const [search, setSearch] = useState('');
   const [busy, setBusy] = useState<string | null>(null);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -188,6 +191,7 @@ export default function AdminDashboard({
           <div className="mb-6 flex gap-2 rounded-2xl border border-purple-500/25 bg-base-900 p-1.5">
             <TabBtn active={tab === 'products'} onClick={() => setTab('products')} icon={Package} label={`Productos (${products.length})`} />
             <TabBtn active={tab === 'reviews'} onClick={() => setTab('reviews')} icon={MessageSquare} label={`Reseñas (${reviews.length})`} />
+            <TabBtn active={tab === 'promotions'} onClick={() => setTab('promotions')} icon={Tag} label="Promociones" />
           </div>
 
           {tab === 'products' && (
@@ -248,6 +252,10 @@ export default function AdminDashboard({
                 ))}
               </div>
             </div>
+          )}
+
+          {tab === 'promotions' && (
+            <PromotionTab promotion={promotion} products={products} onPromotionChange={onPromotionChange} />
           )}
 
           {tab === 'reviews' && (

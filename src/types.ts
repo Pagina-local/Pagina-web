@@ -40,6 +40,15 @@ export interface Review {
   created_at: string;
 }
 
+export interface Promotion {
+  active: boolean;
+  title: string;
+  description: string;
+  promotionalPrice: number;
+  imageUrl: string;
+  productId: string;
+}
+
 export interface StoreSettings {
   id: number;
   whatsapp_number: string;

@@ -4,7 +4,9 @@ import { CartProvider, useCart } from '@/context/CartContext';
 import { fallbackCategories } from '@/lib/fallbackData';
 import { getMergedProducts } from '@/lib/productStore';
 import { getMergedSettings } from '@/lib/settingsStore';
+import { getPromotion } from '@/lib/promotionStore';
 import type { Category, Product, Review, StoreSettings } from '@/types';
+import type { Promotion } from '@/types';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import CategoryTabs from '@/components/CategoryTabs';
@@ -16,6 +18,7 @@ import CheckoutModal from '@/components/CheckoutModal';
 import AdminDashboard from '@/components/AdminDashboard';
 import BottomNav from '@/components/BottomNav';
 import Toast from '@/components/Toast';
+import PromotionModal from '@/components/PromotionModal';
 import { Truck, Instagram, Facebook, Clock, MapPin, MessageCircle } from 'lucide-react';
 
 function StoreApp() {
@@ -24,6 +27,8 @@ function StoreApp() {
   const [products, setProducts] = useState<Product[]>(getMergedProducts);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [settings, setSettings] = useState<StoreSettings | null>(getMergedSettings);
+  const [promotion, setPromotion] = useState<Promotion>(getPromotion);
+  const [promotionOpen, setPromotionOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -72,6 +77,17 @@ function StoreApp() {
   }, []);
 
   useEffect(() => { loadData(); }, [loadData]);
+
+  useEffect(() => {
+    if (!promotion.active || promotionOpen) return;
+    try {
+      if (sessionStorage.getItem('fastfood_promotion_seen_v1')) return;
+      sessionStorage.setItem('fastfood_promotion_seen_v1', 'true');
+    } catch {
+      // Continue showing the promotion when session storage is unavailable.
+    }
+    setPromotionOpen(true);
+  }, [promotion.active, promotionOpen]);
 
   // Sync browser tab title with store name
   useEffect(() => {
@@ -165,6 +181,14 @@ function StoreApp() {
 
       {/* Overlays */}
       <ProductDetailModal product={detailProduct} onClose={() => setDetailProduct(null)} />
+      {promotionOpen && promotion.active && products.some((product) => product.id === promotion.productId) && (
+        <PromotionModal
+          promotion={promotion}
+          product={products.find((product) => product.id === promotion.productId)!}
+          onClose={() => setPromotionOpen(false)}
+          onAdded={() => setToast('¡Promoción agregada al carrito!')}
+        />
+      )}
       <CartDrawer
         open={cartOpen}
         onClose={() => setCartOpen(false)}
@@ -184,10 +208,10 @@ function StoreApp() {
         products={products}
         categories={categories}
         reviews={reviews}
-        settings={settings}
+        promotion={promotion}
         onProductsChange={setProducts}
         onReviewsChange={setReviews}
-        onSettingsChange={setSettings}
+        onPromotionChange={setPromotion}
       />
 
       <BottomNav
