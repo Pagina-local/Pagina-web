@@ -80,7 +80,7 @@ function StoreApp() {
 
   useEffect(() => { loadData(); }, [loadData]);
 
-  const promotionProduct = products.find((product) => product.id === promotion.productId);
+  const promotionProduct = products.find((product) => product.id === promotion.productId) ?? products.find((product) => product.available) ?? products[0];
 
   useEffect(() => {
     if (!promotion.active || promotionOpen || promotionHandled || promotionSuppressed || adminOpen || !promotionProduct) return;

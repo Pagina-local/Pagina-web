@@ -3,7 +3,7 @@ import type { Promotion } from '@/types';
 const STORAGE_KEY = 'fastfood_promotion_v1';
 
 export const defaultPromotion: Promotion = {
-  active: false,
+  active: true,
   title: '¡Promo Estelar del Día!',
   description: 'Una recomendación especial de la tripulación para disfrutar hoy.',
   promotionalPrice: 10200,
