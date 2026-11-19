@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
   Lock, LogOut, Eye, EyeOff, Trash2, Star, Package, MessageSquare, Check, X, Search,
-  Pencil, Save, ImagePlus, RotateCcw, Loader2, Tag, DollarSign, FileText, FolderTree, Store,
+  Pencil, Save, ImagePlus, RotateCcw, Loader2, Tag, DollarSign, FileText, FolderTree, Store, Plus,
 } from 'lucide-react';
 import type { Product, Review, Category, Promotion, StoreSettings } from '@/types';
 import { supabase } from '@/lib/supabase';
 import { formatCOP, formatDate } from '@/lib/utils';
-import { saveProductEdit, resetAllOverrides } from '@/lib/productStore';
+import { saveProductEdit, resetAllOverrides, clearProductOverride } from '@/lib/productStore';
 import ProductEditModal from './ProductEditModal';
 import PromotionTab from './PromotionTab';
 import SettingsTab from './SettingsTab';
@@ -38,6 +38,7 @@ export default function AdminDashboard({
   const [search, setSearch] = useState('');
   const [busy, setBusy] = useState<string | null>(null);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [creatingProduct, setCreatingProduct] = useState(false);
   const [resetFlash, setResetFlash] = useState(false);
 
   useEffect(() => {
@@ -47,6 +48,7 @@ export default function AdminDashboard({
       setTab('products');
       setSearch('');
       setEditingProduct(null);
+      setCreatingProduct(false);
     }
   }, [open]);
 
@@ -90,6 +92,22 @@ export default function AdminDashboard({
   const handleSaveEdit = (updated: Product) => {
     applyProductUpdate(updated);
     setEditingProduct(null);
+    setCreatingProduct(false);
+  };
+
+  const handleCreateProduct = async (created: Product) => {
+    onProductsChange([...products, created]);
+    setCreatingProduct(false);
+  };
+
+  const deleteProduct = async (product: Product) => {
+    if (!confirm(`¿Eliminar "${product.name}" del menú? Esta acción no se puede deshacer.`)) return;
+    setBusy(product.id);
+    const { error: dbErr } = await supabase.from('products').delete().eq('id', product.id);
+    setBusy(null);
+    if (dbErr) return;
+    clearProductOverride(product.id);
+    onProductsChange(products.filter((p) => p.id !== product.id));
   };
 
   const handleResetAll = () => {
@@ -210,12 +228,20 @@ export default function AdminDashboard({
                     className="w-full rounded-xl border border-purple-500/25 bg-white/5 py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:border-brand-mustard/50 focus:outline-none"
                   />
                 </div>
-                <button
-                  onClick={handleResetAll}
-                  className="flex shrink-0 items-center justify-center gap-1.5 rounded-xl border border-purple-500/25 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white"
-                >
-                  <RotateCcw className="h-4 w-4" /> Restaurar
-                </button>
+                <div className="flex shrink-0 items-center gap-2">
+                  <button
+                    onClick={() => setCreatingProduct(true)}
+                    className="flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-br from-brand-mustard to-brand-mustard-dark px-4 py-2.5 text-sm font-bold text-base-950 transition hover:scale-[1.02] active:scale-95"
+                  >
+                    <Plus className="h-4 w-4" /> Agregar
+                  </button>
+                  <button
+                    onClick={handleResetAll}
+                    className="flex items-center justify-center gap-1.5 rounded-xl border border-purple-500/25 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white"
+                  >
+                    <RotateCcw className="h-4 w-4" /> Restaurar
+                  </button>
+                </div>
               </div>
 
               {resetFlash && (
@@ -250,6 +276,14 @@ export default function AdminDashboard({
                       >
                         {p.available ? <Check className="h-3.5 w-3.5" /> : <X className="h-3.5 w-3.5" />}
                         {p.available ? 'Disponible' : 'Agotado'}
+                      </button>
+                      <button
+                        onClick={() => deleteProduct(p)}
+                        disabled={busy === p.id}
+                        className="flex items-center gap-1.5 rounded-full bg-brand-red/15 px-3 py-2 text-xs font-bold text-brand-red-light transition hover:bg-brand-red/25 disabled:opacity-50"
+                        aria-label={`Eliminar ${p.name}`}
+                      >
+                        {busy === p.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
                       </button>
                     </div>
                   </div>
@@ -325,13 +359,13 @@ export default function AdminDashboard({
         </div>
       )}
 
-      {/* Edit modal */}
-      {editingProduct && (
+      {/* Edit / Create modal */}
+      {(editingProduct || creatingProduct) && (
         <ProductEditModal
           product={editingProduct}
           categories={categories}
-          onSave={handleSaveEdit}
-          onClose={() => setEditingProduct(null)}
+          onSave={creatingProduct ? handleCreateProduct : handleSaveEdit}
+          onClose={() => { setEditingProduct(null); setCreatingProduct(false); }}
         />
       )}
     </div>
