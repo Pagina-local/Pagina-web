@@ -122,9 +122,10 @@ export default function AdminDashboard({
       const { error: dbErr } = await supabase.from('products').delete().eq('id', product.id);
       if (dbErr) throw dbErr;
       clearProductOverride(product.id);
-    } catch {
+    } catch (e) {
       onProductsChange(previous);
-      setActionError(`No se pudo eliminar "${product.name}". Inténtalo de nuevo.`);
+      const reason = e instanceof Error && e.message ? e.message : 'Error desconocido';
+      setActionError(`No se pudo eliminar "${product.name}": ${reason}`);
     } finally {
       setBusy(null);
     }
