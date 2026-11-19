@@ -27,6 +27,16 @@ jobs:
 
       - run: npm ci
 
+      - name: Check Supabase build config
+        run: |
+          if [ -z "$VITE_SUPABASE_URL" ] || [ -z "$VITE_SUPABASE_ANON_KEY" ]; then
+            echo "::warning::Faltan VITE_SUPABASE_URL y/o VITE_SUPABASE_ANON_KEY. El sitio se compilará sin conexión a la base de datos."
+            echo "::warning::Cargalas en Settings → Secrets and variables → Actions, o pegalas en index.html (window.__SUPABASE_CONFIG__)."
+          fi
+        env:
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
       - run: npm run build
         env:
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}

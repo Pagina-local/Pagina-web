@@ -88,17 +88,20 @@ export default function AdminDashboard({
     const next = { ...product, available: !product.available };
     applyProductUpdate(next);
     supabase.from('products').update({ available: next.available }).eq('id', product.id)
-      .then(({ error }) => {
-        if (error) {
+      .then(
+        ({ error }) => {
+          if (error) {
+            applyProductUpdate(product);
+            setActionError(`No se pudo actualizar la disponibilidad: ${error.message}`);
+          }
+        },
+        (err: unknown) => {
           applyProductUpdate(product);
-          setActionError('No se pudo actualizar la disponibilidad. Inténtalo de nuevo.');
-        }
-      })
-      .catch(() => {
-        applyProductUpdate(product);
-        setActionError('No se pudo actualizar la disponibilidad. Inténtalo de nuevo.');
-      })
-      .finally(() => setBusy(null));
+          const reason = err instanceof Error && err.message ? err.message : 'Error desconocido';
+          setActionError(`No se pudo actualizar la disponibilidad: ${reason}`);
+        },
+      );
+    setBusy(null);
   };
 
   const handleSaveEdit = (updated: Product) => {
