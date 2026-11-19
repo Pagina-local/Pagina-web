@@ -219,7 +219,7 @@ export const fallbackProducts: Product[] = [
 
 export const fallbackSettings: StoreSettings = {
   id: 1,
-  whatsapp_number: '573001112233',
+  whatsapp_number: '573142616195',
   delivery_fee: 5000,
   promo_title: 'Combo del Día: 2x1 en Combos Clásicos',
   promo_subtitle: 'Solo por hoy, llevá dos combos al precio de uno. ¡Pedí antes de las 9pm!',

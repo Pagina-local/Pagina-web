@@ -126,7 +126,7 @@ function StoreApp() {
   }, []);
 
   const deliveryFee = settings?.delivery_fee ?? 5000;
-  const whatsappNumber = settings?.whatsapp_number ?? '573001112233';
+  const whatsappNumber = settings?.whatsapp_number ?? '573142616195';
 
   return (
     <div className="min-h-screen bg-base-950 pb-20 lg:pb-0">
@@ -312,7 +312,7 @@ function Footer({ settings }: { settings: StoreSettings | null }) {
               <a href={tiktokUrl} target="_blank" rel="noopener noreferrer" className="flex h-9 w-9 items-center justify-center rounded-full border border-brand-indigo/30 bg-brand-indigo/10 text-brand-purple-light transition hover:border-brand-indigo hover:bg-brand-indigo/25 hover:text-white" aria-label="TikTok">
                 <Music2 className="h-4 w-4" />
               </a>
-              <a href="#" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-slate-300 transition hover:bg-white/10 hover:text-white" aria-label="WhatsApp">
+              <a href={`https://wa.me/${settings?.whatsapp_number ?? '573142616195'}`} target="_blank" rel="noopener noreferrer" className="flex h-9 w-9 items-center justify-center rounded-full border border-green-500/30 bg-green-500/10 text-green-300 transition hover:border-green-500 hover:bg-green-500/25 hover:text-white" aria-label="WhatsApp">
                 <MessageCircle className="h-4 w-4" />
               </a>
             </div>

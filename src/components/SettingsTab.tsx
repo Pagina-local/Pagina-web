@@ -91,7 +91,11 @@ export default function SettingsTab({ settings, onSettingsChange }: SettingsTabP
     setSaving(true);
     const { error: syncError } = await supabase
       .from('store_settings')
-      .update({ location_url: updated.location_url, location_label: updated.location_label })
+      .update({
+        whatsapp_number: updated.whatsapp_number,
+        location_url: updated.location_url,
+        location_label: updated.location_label,
+      })
       .eq('id', settings.id);
     setSaving(false);
     if (syncError) return setError('No se pudo sincronizar la ubicación. Intenta guardar de nuevo.');
@@ -218,7 +222,7 @@ export default function SettingsTab({ settings, onSettingsChange }: SettingsTabP
             value={whatsappNumber}
             onChange={(e) => setWhatsappNumber(e.target.value)}
             className={inputCls}
-            placeholder="Ej: 573001112233 (código de país + número)"
+            placeholder="Ej: 573142616195 (código de país + número)"
             inputMode="numeric"
           />
           <p className="mt-1 text-xs text-slate-500">Incluye el código de país sin signos. Ej: 57 para Colombia.</p>
