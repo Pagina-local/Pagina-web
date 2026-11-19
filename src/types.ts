@@ -62,6 +62,8 @@ export interface StoreSettings {
   logo_type: 'icon' | 'image';
   instagram_url: string;
   tiktok_url: string;
+  location_url: string;
+  location_label: string;
 }
 
 export interface CartItemExtras {

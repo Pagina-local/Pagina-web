@@ -284,6 +284,8 @@ function Footer({ settings }: { settings: StoreSettings | null }) {
   const logoType = settings?.logo_type ?? 'icon';
   const instagramUrl = settings?.instagram_url ?? 'https://www.instagram.com/universo22.fastfood?fqnt=MXd0MXIxY3AxMHdwNQ%3D%3D&utm_source=qr';
   const tiktokUrl = settings?.tiktok_url ?? 'https://www.tiktok.com/@universo.2244?_r=1&_t=ZS-9BWVPLkjJH6';
+  const locationUrl = settings?.location_url ?? 'https://maps.app.goo.gl/bzABoLhTwDbN7VgL8';
+  const locationLabel = settings?.location_label ?? 'Plato, Magdalena (CP 475030)';
   return (
     <footer className="border-t border-purple-500/25 bg-base-900">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -326,10 +328,13 @@ function Footer({ settings }: { settings: StoreSettings | null }) {
 
           <div>
             <h4 className="font-semibold text-white">Ubicación</h4>
-            <ul className="mt-3 space-y-2 text-sm text-slate-400">
-              <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-brand-mustard" /> Cra 45 # 12-34, Centro</li>
-              <li className="flex items-center gap-2"><Truck className="h-4 w-4 text-brand-mustard" /> Domicilio a toda la ciudad</li>
-            </ul>
+            <div className="mt-3 space-y-3 text-sm text-slate-400">
+              <p className="flex items-start gap-2"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-mustard" /> {locationLabel}</p>
+              <p className="flex items-center gap-2"><Truck className="h-4 w-4 shrink-0 text-brand-mustard" /> Domicilio a toda la ciudad</p>
+              <a href={locationUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full border border-brand-mustard/30 bg-brand-mustard/10 px-3 py-2 text-xs font-semibold text-brand-mustard-light transition hover:border-brand-mustard hover:bg-brand-mustard/20">
+                <MapPin className="h-3.5 w-3.5" /> Ver indicaciones
+              </a>
+            </div>
           </div>
         </div>
 

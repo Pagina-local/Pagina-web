@@ -230,4 +230,6 @@ export const fallbackSettings: StoreSettings = {
   logo_type: 'icon',
   instagram_url: 'https://www.instagram.com/universo22.fastfood?fqnt=MXd0MXIxY3AxMHdwNQ%3D%3D&utm_source=qr',
   tiktok_url: 'https://www.tiktok.com/@universo.2244?_r=1&_t=ZS-9BWVPLkjJH6',
+  location_url: 'https://maps.app.goo.gl/bzABoLhTwDbN7VgL8',
+  location_label: 'Plato, Magdalena (CP 475030)',
 };
