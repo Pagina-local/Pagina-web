@@ -40,6 +40,7 @@ export default function AdminDashboard({
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [creatingProduct, setCreatingProduct] = useState(false);
   const [resetFlash, setResetFlash] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   useEffect(() => {
     if (open) {
@@ -49,6 +50,7 @@ export default function AdminDashboard({
       setSearch('');
       setEditingProduct(null);
       setCreatingProduct(false);
+      setActionError(null);
     }
   }, [open]);
 
@@ -85,8 +87,18 @@ export default function AdminDashboard({
     setBusy(product.id);
     const next = { ...product, available: !product.available };
     applyProductUpdate(next);
-    void supabase.from('products').update({ available: next.available }).eq('id', product.id)
-      .then(() => setBusy(null));
+    supabase.from('products').update({ available: next.available }).eq('id', product.id)
+      .then(({ error }) => {
+        if (error) {
+          applyProductUpdate(product);
+          setActionError('No se pudo actualizar la disponibilidad. Inténtalo de nuevo.');
+        }
+      })
+      .catch(() => {
+        applyProductUpdate(product);
+        setActionError('No se pudo actualizar la disponibilidad. Inténtalo de nuevo.');
+      })
+      .finally(() => setBusy(null));
   };
 
   const handleSaveEdit = (updated: Product) => {
@@ -102,12 +114,20 @@ export default function AdminDashboard({
 
   const deleteProduct = async (product: Product) => {
     if (!confirm(`¿Eliminar "${product.name}" del menú? Esta acción no se puede deshacer.`)) return;
+    setActionError(null);
     setBusy(product.id);
-    const { error: dbErr } = await supabase.from('products').delete().eq('id', product.id);
-    setBusy(null);
-    if (dbErr) return;
-    clearProductOverride(product.id);
+    const previous = products;
     onProductsChange(products.filter((p) => p.id !== product.id));
+    try {
+      const { error: dbErr } = await supabase.from('products').delete().eq('id', product.id);
+      if (dbErr) throw dbErr;
+      clearProductOverride(product.id);
+    } catch {
+      onProductsChange(previous);
+      setActionError(`No se pudo eliminar "${product.name}". Inténtalo de nuevo.`);
+    } finally {
+      setBusy(null);
+    }
   };
 
   const handleResetAll = () => {
@@ -120,19 +140,23 @@ export default function AdminDashboard({
 
   const setReviewStatus = async (id: string, status: 'approved' | 'hidden') => {
     setBusy(id);
-    const { error } = await supabase.from('reviews').update({ status }).eq('id', id);
-    setBusy(null);
-    if (error) return;
-    onReviewsChange(reviews.map((r) => (r.id === id ? { ...r, status } : r)));
+    try {
+      const { error } = await supabase.from('reviews').update({ status }).eq('id', id);
+      if (!error) onReviewsChange(reviews.map((r) => (r.id === id ? { ...r, status } : r)));
+    } finally {
+      setBusy(null);
+    }
   };
 
   const deleteReview = async (id: string) => {
     if (!confirm('¿Eliminar esta reseña y su foto de forma permanente?')) return;
     setBusy(id);
-    const { error } = await supabase.from('reviews').delete().eq('id', id);
-    setBusy(null);
-    if (error) return;
-    onReviewsChange(reviews.filter((r) => r.id !== id));
+    try {
+      const { error } = await supabase.from('reviews').delete().eq('id', id);
+      if (!error) onReviewsChange(reviews.filter((r) => r.id !== id));
+    } finally {
+      setBusy(null);
+    }
   };
 
   const categoryName = (id: string) => categories.find((c) => c.id === id)?.name ?? '—';
@@ -250,15 +274,23 @@ export default function AdminDashboard({
                 </p>
               )}
 
+              {actionError && (
+                <p className="mb-3 animate-slide-up rounded-xl bg-brand-red/15 px-4 py-2 text-xs text-brand-red-light">
+                  {actionError}
+                </p>
+              )}
+
               <div className="space-y-2">
                 {filteredProducts.map((p) => (
-                  <div key={p.id} className="flex flex-wrap items-center gap-3 rounded-2xl border border-purple-500/25 bg-base-900 p-3 sm:flex-nowrap">
-                    <img src={p.image_url} alt={p.name} className="h-14 w-14 shrink-0 rounded-xl object-cover" />
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate font-semibold text-white">{p.name}</p>
-                      <p className="truncate text-xs text-slate-400">{categoryName(p.category_id)} · {formatCOP(p.base_price)}</p>
+                  <div key={p.id} className="rounded-2xl border border-purple-500/25 bg-base-900 p-3">
+                    <div className="flex items-center gap-3">
+                      <img src={p.image_url} alt={p.name} className="h-14 w-14 shrink-0 rounded-xl object-cover" />
+                      <div className="min-w-0 flex-1">
+                        <p className="break-words font-semibold text-white">{p.name}</p>
+                        <p className="text-xs text-slate-400">{categoryName(p.category_id)} · {formatCOP(p.base_price)}</p>
+                      </div>
                     </div>
-                    <div className="flex shrink-0 items-center gap-2">
+                    <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-white/5 pt-3">
                       <button
                         onClick={() => setEditingProduct(p)}
                         className="flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-2 text-xs font-bold text-white transition hover:bg-brand-mustard/15 hover:text-brand-mustard-light"
@@ -280,7 +312,7 @@ export default function AdminDashboard({
                       <button
                         onClick={() => deleteProduct(p)}
                         disabled={busy === p.id}
-                        className="flex items-center gap-1.5 rounded-full bg-brand-red/15 px-3 py-2 text-xs font-bold text-brand-red-light transition hover:bg-brand-red/25 disabled:opacity-50"
+                        className="ml-auto flex items-center gap-1.5 rounded-full bg-brand-red/15 px-3 py-2 text-xs font-bold text-brand-red-light transition hover:bg-brand-red/25 disabled:opacity-50"
                         aria-label={`Eliminar ${p.name}`}
                       >
                         {busy === p.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
