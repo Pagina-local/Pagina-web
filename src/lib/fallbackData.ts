@@ -228,4 +228,6 @@ export const fallbackSettings: StoreSettings = {
   tagline: 'Sabor de otro planeta',
   logo_url: '',
   logo_type: 'icon',
+  instagram_url: 'https://www.instagram.com/universo22.fastfood?fqnt=MXd0MXIxY3AxMHdwNQ%3D%3D&utm_source=qr',
+  tiktok_url: 'https://www.tiktok.com/@universo.2244?_r=1&_t=ZS-9BWVPLkjJH6',
 };

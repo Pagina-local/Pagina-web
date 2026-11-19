@@ -19,7 +19,7 @@ import AdminDashboard from '@/components/AdminDashboard';
 import BottomNav from '@/components/BottomNav';
 import Toast from '@/components/Toast';
 import PromotionModal from '@/components/PromotionModal';
-import { Truck, Instagram, Facebook, Clock, MapPin, MessageCircle } from 'lucide-react';
+import { Truck, Instagram, Clock, MapPin, MessageCircle, Music2 } from 'lucide-react';
 
 function StoreApp() {
   const { totalItems } = useCart();
@@ -226,6 +226,8 @@ function StoreApp() {
         onProductsChange={setProducts}
         onReviewsChange={setReviews}
         onPromotionChange={handlePromotionChange}
+        settings={settings ?? getMergedSettings()}
+        onSettingsChange={setSettings}
       />
 
       <BottomNav
@@ -280,6 +282,8 @@ function Footer({ settings }: { settings: StoreSettings | null }) {
   const tagline = settings?.tagline ?? 'Sabor de otro planeta';
   const logoUrl = settings?.logo_url ?? '';
   const logoType = settings?.logo_type ?? 'icon';
+  const instagramUrl = settings?.instagram_url ?? 'https://www.instagram.com/universo22.fastfood?fqnt=MXd0MXIxY3AxMHdwNQ%3D%3D&utm_source=qr';
+  const tiktokUrl = settings?.tiktok_url ?? 'https://www.tiktok.com/@universo.2244?_r=1&_t=ZS-9BWVPLkjJH6';
   return (
     <footer className="border-t border-purple-500/25 bg-base-900">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -300,11 +304,11 @@ function Footer({ settings }: { settings: StoreSettings | null }) {
               Comida rápida urbana hecha con ingredientes frescos. Hamburguesas a la parrilla, salchipapas crujientes y combos para compartir.
             </p>
             <div className="mt-5 flex gap-3">
-              <a href="#" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-slate-300 transition hover:bg-white/10 hover:text-white" aria-label="Instagram">
+              <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="flex h-9 w-9 items-center justify-center rounded-full border border-brand-purple/30 bg-brand-purple/10 text-brand-purple-light transition hover:border-brand-purple hover:bg-brand-purple/25 hover:text-white" aria-label="Instagram">
                 <Instagram className="h-4 w-4" />
               </a>
-              <a href="#" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-slate-300 transition hover:bg-white/10 hover:text-white" aria-label="Facebook">
-                <Facebook className="h-4 w-4" />
+              <a href={tiktokUrl} target="_blank" rel="noopener noreferrer" className="flex h-9 w-9 items-center justify-center rounded-full border border-brand-indigo/30 bg-brand-indigo/10 text-brand-purple-light transition hover:border-brand-indigo hover:bg-brand-indigo/25 hover:text-white" aria-label="TikTok">
+                <Music2 className="h-4 w-4" />
               </a>
               <a href="#" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-slate-300 transition hover:bg-white/10 hover:text-white" aria-label="WhatsApp">
                 <MessageCircle className="h-4 w-4" />

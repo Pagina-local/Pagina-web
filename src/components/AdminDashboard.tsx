@@ -1,14 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
   Lock, LogOut, Eye, EyeOff, Trash2, Star, Package, MessageSquare, Check, X, Search,
-  Pencil, Save, ImagePlus, RotateCcw, Loader2, Tag, DollarSign, FileText, FolderTree,
+  Pencil, Save, ImagePlus, RotateCcw, Loader2, Tag, DollarSign, FileText, FolderTree, Store,
 } from 'lucide-react';
-import type { Product, Review, Category, Promotion } from '@/types';
+import type { Product, Review, Category, Promotion, StoreSettings } from '@/types';
 import { supabase } from '@/lib/supabase';
 import { formatCOP, formatDate } from '@/lib/utils';
 import { saveProductEdit, resetAllOverrides } from '@/lib/productStore';
 import ProductEditModal from './ProductEditModal';
 import PromotionTab from './PromotionTab';
+import SettingsTab from './SettingsTab';
 
 interface AdminDashboardProps {
   open: boolean;
@@ -20,18 +21,20 @@ interface AdminDashboardProps {
   onProductsChange: (products: Product[]) => void;
   onReviewsChange: (reviews: Review[]) => void;
   onPromotionChange: (promotion: Promotion) => void;
+  settings: StoreSettings;
+  onSettingsChange: (settings: StoreSettings) => void;
 }
 
 const ADMIN_PASSWORD = 'UNIVERSO22*';
 
 export default function AdminDashboard({
-  open, onClose, products, categories, reviews, promotion, onProductsChange, onReviewsChange, onPromotionChange,
+  open, onClose, products, categories, reviews, promotion, onProductsChange, onReviewsChange, onPromotionChange, settings, onSettingsChange,
 }: AdminDashboardProps) {
   const [authed, setAuthed] = useState(false);
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [authError, setAuthError] = useState(false);
-  const [tab, setTab] = useState<'products' | 'reviews' | 'promotions'>('products');
+  const [tab, setTab] = useState<'products' | 'reviews' | 'promotions' | 'settings'>('products');
   const [search, setSearch] = useState('');
   const [busy, setBusy] = useState<string | null>(null);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -192,6 +195,7 @@ export default function AdminDashboard({
             <TabBtn active={tab === 'products'} onClick={() => setTab('products')} icon={Package} label={`Productos (${products.length})`} />
             <TabBtn active={tab === 'reviews'} onClick={() => setTab('reviews')} icon={MessageSquare} label={`Reseñas (${reviews.length})`} />
             <TabBtn active={tab === 'promotions'} onClick={() => setTab('promotions')} icon={Tag} label="Promociones" />
+            <TabBtn active={tab === 'settings'} onClick={() => setTab('settings')} icon={Store} label="Configuración" />
           </div>
 
           {tab === 'products' && (
@@ -257,6 +261,8 @@ export default function AdminDashboard({
           {tab === 'promotions' && (
             <PromotionTab promotion={promotion} products={products} onPromotionChange={onPromotionChange} />
           )}
+
+          {tab === 'settings' && <SettingsTab settings={settings} onSettingsChange={onSettingsChange} />}
 
           {tab === 'reviews' && (
             <div className="animate-fade-in space-y-3">

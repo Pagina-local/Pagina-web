@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
   Store, Image as ImageIcon, ImagePlus, Phone, Save, Loader2, RotateCcw,
-  Type, Sparkles, Check,
+  Type, Sparkles, Check, Link, Instagram, Music2,
 } from 'lucide-react';
 import type { StoreSettings } from '@/types';
 import { supabase } from '@/lib/supabase';
@@ -18,6 +18,8 @@ export default function SettingsTab({ settings, onSettingsChange }: SettingsTabP
   const [logoType, setLogoType] = useState<'icon' | 'image'>(settings.logo_type);
   const [logoUrl, setLogoUrl] = useState(settings.logo_url);
   const [whatsappNumber, setWhatsappNumber] = useState(settings.whatsapp_number);
+  const [instagramUrl, setInstagramUrl] = useState(settings.instagram_url);
+  const [tiktokUrl, setTiktokUrl] = useState(settings.tiktok_url);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -29,6 +31,8 @@ export default function SettingsTab({ settings, onSettingsChange }: SettingsTabP
     setLogoType(settings.logo_type);
     setLogoUrl(settings.logo_url);
     setWhatsappNumber(settings.whatsapp_number);
+    setInstagramUrl(settings.instagram_url);
+    setTiktokUrl(settings.tiktok_url);
   }, [settings]);
 
   const handleUpload = async (file: File) => {
@@ -69,6 +73,8 @@ export default function SettingsTab({ settings, onSettingsChange }: SettingsTabP
       logo_type: logoType,
       logo_url: logoUrl.trim(),
       whatsapp_number: trimmedPhone,
+      instagram_url: instagramUrl.trim(),
+      tiktok_url: tiktokUrl.trim(),
     };
     saveSettings(updated);
     onSettingsChange(updated);
@@ -85,6 +91,8 @@ export default function SettingsTab({ settings, onSettingsChange }: SettingsTabP
     setLogoType(original.logo_type);
     setLogoUrl(original.logo_url);
     setWhatsappNumber(original.whatsapp_number);
+    setInstagramUrl(original.instagram_url);
+    setTiktokUrl(original.tiktok_url);
   };
 
   const inputCls = 'w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder-slate-500 transition focus:border-brand-mustard/50 focus:outline-none';
@@ -194,6 +202,27 @@ export default function SettingsTab({ settings, onSettingsChange }: SettingsTabP
             inputMode="numeric"
           />
           <p className="mt-1 text-xs text-slate-500">Incluye el código de país sin signos. Ej: 57 para Colombia.</p>
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-white/10 bg-base-900 p-5">
+        <h3 className="flex items-center gap-2 font-display text-lg tracking-wide text-white">
+          <Link className="h-5 w-5 text-brand-mustard" /> Redes Sociales
+        </h3>
+        <p className="mt-1 text-xs text-slate-400">Estos enlaces aparecen en el pie de página y se abren en una pestaña nueva.</p>
+        <div className="mt-4 space-y-4">
+          <div>
+            <label className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <Instagram className="h-3.5 w-3.5" /> Instagram
+            </label>
+            <input value={instagramUrl} onChange={(e) => setInstagramUrl(e.target.value)} className={inputCls} placeholder="https://www.instagram.com/..." />
+          </div>
+          <div>
+            <label className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <Music2 className="h-3.5 w-3.5" /> TikTok
+            </label>
+            <input value={tiktokUrl} onChange={(e) => setTiktokUrl(e.target.value)} className={inputCls} placeholder="https://www.tiktok.com/..." />
+          </div>
         </div>
       </div>
 
