@@ -37,12 +37,12 @@ export default function ProductEditModal({ product, categories, onSave, onClose 
     setUploading(true);
     try {
       const filePath = `products/${Date.now()}-${Math.random().toString(36).slice(2)}.${file.name.split('.').pop() || 'jpg'}`;
-      const { error: upErr } = await supabase.storage.from('reviews').upload(filePath, file, {
+      const { error: upErr, data: upData } = await supabase.storage.from('reviews').upload(filePath, file, {
         contentType: file.type,
         upsert: false,
       });
-      if (upErr) throw new Error('No se pudo subir la imagen. Intentá de nuevo.');
-      const { data: pub } = supabase.storage.from('reviews').getPublicUrl(filePath);
+      if (upErr) throw new Error(upErr.message);
+      const { data: pub } = supabase.storage.from('reviews').getPublicUrl((upData as { path?: string } | null)?.path ?? filePath);
       setImageUrl(pub.publicUrl);
     } catch (e) {
       setUploadError(e instanceof Error ? e.message : 'Error al subir la imagen.');
@@ -68,6 +68,7 @@ export default function ProductEditModal({ product, categories, onSave, onClose 
       category_id: categoryId,
     });
   };
+
 
   const inputCls = 'w-full rounded-xl border border-purple-500/25 bg-white/5 px-3 py-2.5 text-sm text-white placeholder-slate-500 transition focus:border-brand-mustard/50 focus:outline-none';
 

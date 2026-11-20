@@ -12,6 +12,12 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // Configuración de la base de datos para producción (universo22.lat).
+      // Se usa cuando el build de GitHub Actions no recibe las variables de
+      // entorno. Pegá la URL de tu proyecto Supabase y su clave pública "anon".
+      window.__SUPABASE_CONFIG__ = { url: '', anonKey: '' };
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

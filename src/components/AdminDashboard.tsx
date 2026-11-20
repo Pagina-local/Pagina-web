@@ -4,9 +4,9 @@ import {
   Pencil, Save, ImagePlus, RotateCcw, Loader2, Tag, DollarSign, FileText, FolderTree,
 } from 'lucide-react';
 import type { Product, Review, Category, Promotion } from '@/types';
-import { supabase } from '@/lib/supabase';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { formatCOP, formatDate } from '@/lib/utils';
-import { saveProductEdit, resetAllOverrides } from '@/lib/productStore';
+import { saveProductEdit, resetAllOverrides, clearProductOverride } from '@/lib/productStore';
 import ProductEditModal from './ProductEditModal';
 import PromotionTab from './PromotionTab';
 
@@ -36,6 +36,7 @@ export default function AdminDashboard({
   const [busy, setBusy] = useState<string | null>(null);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [resetFlash, setResetFlash] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   useEffect(() => {
     if (open) {
@@ -44,6 +45,7 @@ export default function AdminDashboard({
       setTab('products');
       setSearch('');
       setEditingProduct(null);
+      setActionError(null);
     }
   }, [open]);
 
@@ -74,14 +76,47 @@ export default function AdminDashboard({
   const applyProductUpdate = (updated: Product) => {
     saveProductEdit(updated);
     onProductsChange(products.map((p) => (p.id === updated.id ? updated : p)));
+    supabase.from('products').update({
+      name: updated.name,
+      description: updated.description,
+      base_price: updated.base_price,
+      image_url: updated.image_url,
+      category_id: updated.category_id,
+      available: updated.available,
+      variations: updated.variations,
+      extras: updated.extras,
+      sort_order: updated.sort_order,
+    }).eq('id', updated.id)
+      .then(
+        ({ error }) => {
+          if (error) setActionError(`Los cambios no se guardaron en la base de datos: ${error.message}`);
+        },
+        (err: unknown) => {
+          const reason = err instanceof Error && err.message ? err.message : 'Error desconocido';
+          setActionError(`Los cambios no se guardaron en la base de datos: ${reason}`);
+        },
+      );
   };
 
   const toggleAvailability = (product: Product) => {
     setBusy(product.id);
     const next = { ...product, available: !product.available };
     applyProductUpdate(next);
-    void supabase.from('products').update({ available: next.available }).eq('id', product.id)
-      .then(() => setBusy(null));
+    supabase.from('products').update({ available: next.available }).eq('id', product.id)
+      .then(
+        ({ error }) => {
+          if (error) {
+            applyProductUpdate(product);
+            setActionError(`No se pudo actualizar la disponibilidad: ${error.message}`);
+          }
+        },
+        (err: unknown) => {
+          applyProductUpdate(product);
+          const reason = err instanceof Error && err.message ? err.message : 'Error desconocido';
+          setActionError(`No se pudo actualizar la disponibilidad: ${reason}`);
+        },
+      );
+    setBusy(null);
   };
 
   const handleSaveEdit = (updated: Product) => {
@@ -97,21 +132,46 @@ export default function AdminDashboard({
     setTimeout(() => setResetFlash(false), 2500);
   };
 
+  const deleteProduct = async (product: Product) => {
+    if (!confirm(`¿Eliminar "${product.name}" del menú? Esta acción no se puede deshacer.`)) return;
+    setActionError(null);
+    setBusy(product.id);
+    const previous = products;
+    onProductsChange(products.filter((p) => p.id !== product.id));
+    try {
+      const { error: dbErr } = await supabase.from('products').delete().eq('id', product.id);
+      if (dbErr) throw dbErr;
+      clearProductOverride(product.id);
+    } catch (e) {
+      onProductsChange(previous);
+      const reason = e instanceof Error && e.message ? e.message : 'Error desconocido';
+      setActionError(`No se pudo eliminar "${product.name}": ${reason}`);
+    } finally {
+      setBusy(null);
+    }
+  };
+
   const setReviewStatus = async (id: string, status: 'approved' | 'hidden') => {
     setBusy(id);
-    const { error } = await supabase.from('reviews').update({ status }).eq('id', id);
-    setBusy(null);
-    if (error) return;
-    onReviewsChange(reviews.map((r) => (r.id === id ? { ...r, status } : r)));
+    try {
+      const { error } = await supabase.from('reviews').update({ status }).eq('id', id);
+      if (!error) onReviewsChange(reviews.map((r) => (r.id === id ? { ...r, status } : r)));
+      else setActionError(`No se pudo actualizar la reseña: ${error.message}`);
+    } finally {
+      setBusy(null);
+    }
   };
 
   const deleteReview = async (id: string) => {
     if (!confirm('¿Eliminar esta reseña y su foto de forma permanente?')) return;
     setBusy(id);
-    const { error } = await supabase.from('reviews').delete().eq('id', id);
-    setBusy(null);
-    if (error) return;
-    onReviewsChange(reviews.filter((r) => r.id !== id));
+    try {
+      const { error } = await supabase.from('reviews').delete().eq('id', id);
+      if (!error) onReviewsChange(reviews.filter((r) => r.id !== id));
+      else setActionError(`No se pudo eliminar la reseña: ${error.message}`);
+    } finally {
+      setBusy(null);
+    }
   };
 
   const categoryName = (id: string) => categories.find((c) => c.id === id)?.name ?? '—';
@@ -220,6 +280,12 @@ export default function AdminDashboard({
                 </p>
               )}
 
+              {actionError && (
+                <p className="mb-3 animate-slide-up rounded-xl bg-brand-red/15 px-4 py-2 text-xs text-brand-red-light">
+                  {actionError}
+                </p>
+              )}
+
               <div className="space-y-2">
                 {filteredProducts.map((p) => (
                   <div key={p.id} className="flex flex-wrap items-center gap-3 rounded-2xl border border-purple-500/25 bg-base-900 p-3 sm:flex-nowrap">
@@ -246,6 +312,14 @@ export default function AdminDashboard({
                       >
                         {p.available ? <Check className="h-3.5 w-3.5" /> : <X className="h-3.5 w-3.5" />}
                         {p.available ? 'Disponible' : 'Agotado'}
+                      </button>
+                      <button
+                        onClick={() => deleteProduct(p)}
+                        disabled={busy === p.id}
+                        className="flex items-center gap-1.5 rounded-full bg-brand-red/15 px-3 py-2 text-xs font-bold text-brand-red-light transition hover:bg-brand-red/25 disabled:opacity-50"
+                        aria-label={`Eliminar ${p.name}`}
+                      >
+                        {busy === p.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
                       </button>
                     </div>
                   </div>
