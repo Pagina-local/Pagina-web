@@ -1,3 +1,4 @@
+
 name: Deploy to GitHub Pages
 
 on:
@@ -30,17 +31,18 @@ jobs:
       - name: Check Supabase build config
         run: |
           if [ -z "$VITE_SUPABASE_URL" ] || [ -z "$VITE_SUPABASE_ANON_KEY" ]; then
-            echo "::warning::Faltan VITE_SUPABASE_URL y/o VITE_SUPABASE_ANON_KEY. El sitio se compila sin base de datos."
-            echo "::warning::Cargalas en Settings > Secrets and variables > Actions, o pegalas en index.html (window.__SUPABASE_CONFIG__)."
+            echo "::error::Faltan variables de Supabase"
+            exit 1
           fi
         env:
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
-         VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
 
-      - run: npm run build
+      - name: Build
+        run: npm run build
         env:
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
-         VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
 
       - uses: actions/upload-pages-artifact@v3
         with:
@@ -55,3 +57,4 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
