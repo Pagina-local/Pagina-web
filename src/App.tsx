@@ -224,6 +224,7 @@ function StoreApp() {
         reviews={reviews}
         promotion={promotion}
         onProductsChange={setProducts}
+        onCategoriesChange={setCategories}
         onReviewsChange={setReviews}
         onPromotionChange={handlePromotionChange}
       />

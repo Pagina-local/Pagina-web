@@ -1,22 +1,23 @@
 import { useEffect, useState } from 'react';
 import { X, Save, ImagePlus, Loader2, Tag, DollarSign, FileText, FolderTree } from 'lucide-react';
 import type { Product, Category } from '@/types';
-import { supabase } from '@/lib/supabase';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { formatCOP } from '@/lib/utils';
 
 interface ProductEditModalProps {
-  product: Product;
+  product: Product | null;
   categories: Category[];
-  onSave: (updated: Product) => void;
+  onSave: (product: Product) => void;
   onClose: () => void;
 }
 
 export default function ProductEditModal({ product, categories, onSave, onClose }: ProductEditModalProps) {
-  const [name, setName] = useState(product.name);
-  const [price, setPrice] = useState(String(product.base_price));
-  const [description, setDescription] = useState(product.description);
-  const [imageUrl, setImageUrl] = useState(product.image_url);
-  const [categoryId, setCategoryId] = useState(product.category_id);
+  const isNew = product === null;
+  const [name, setName] = useState(product?.name ?? '');
+  const [price, setPrice] = useState(String(product?.base_price ?? ''));
+  const [description, setDescription] = useState(product?.description ?? '');
+  const [imageUrl, setImageUrl] = useState(product?.image_url ?? '');
+  const [categoryId, setCategoryId] = useState(product?.category_id ?? categories[0]?.id ?? '');
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -34,15 +35,20 @@ export default function ProductEditModal({ product, categories, onSave, onClose 
       setUploadError('La imagen es muy grande. Máximo 4MB.');
       return;
     }
+    if (!isSupabaseConfigured) {
+      setUploadError('La base de datos no está configurada en esta instalación.');
+      return;
+    }
     setUploading(true);
     try {
-      const filePath = `products/${Date.now()}-${Math.random().toString(36).slice(2)}.${file.name.split('.').pop() || 'jpg'}`;
-      const { error: upErr, data: upData } = await supabase.storage.from('reviews').upload(filePath, file, {
+      const ext = file.name.split('.').pop() || 'jpg';
+      const filePath = `products/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { error: upErr } = await supabase.storage.from('menu').upload(filePath, file, {
         contentType: file.type,
         upsert: false,
       });
       if (upErr) throw new Error(upErr.message);
-      const { data: pub } = supabase.storage.from('reviews').getPublicUrl((upData as { path?: string } | null)?.path ?? filePath);
+      const { data: pub } = supabase.storage.from('menu').getPublicUrl(filePath);
       setImageUrl(pub.publicUrl);
     } catch (e) {
       setUploadError(e instanceof Error ? e.message : 'Error al subir la imagen.');
@@ -57,18 +63,22 @@ export default function ProductEditModal({ product, categories, onSave, onClose 
     if (!trimmedName) return setError('El nombre es obligatorio.');
     const numPrice = Number(price.replace(/[^\d]/g, ''));
     if (Number.isNaN(numPrice) || numPrice < 0) return setError('El precio no es válido.');
-    if (!imageUrl.trim()) return setError('La imagen es obligatoria.');
+    if (!imageUrl.trim()) return setError('La imagen es obligatoria (URL o subida).');
+    if (!categoryId) return setError('Elegí una categoría.');
 
     onSave({
-      ...product,
+      id: product?.id ?? crypto.randomUUID(),
+      category_id: categoryId,
       name: trimmedName,
       base_price: numPrice,
       description: description.trim(),
       image_url: imageUrl.trim(),
-      category_id: categoryId,
+      variations: product?.variations ?? [],
+      extras: product?.extras ?? [],
+      available: product?.available ?? true,
+      sort_order: product?.sort_order ?? 99,
     });
   };
-
 
   const inputCls = 'w-full rounded-xl border border-purple-500/25 bg-white/5 px-3 py-2.5 text-sm text-white placeholder-slate-500 transition focus:border-brand-mustard/50 focus:outline-none';
 
@@ -80,7 +90,7 @@ export default function ProductEditModal({ product, categories, onSave, onClose 
         {/* Header */}
         <div className="flex shrink-0 items-center justify-between border-b border-purple-500/25 px-5 py-4">
           <h2 className="flex items-center gap-2 font-display text-2xl tracking-wide text-white">
-            <Tag className="h-6 w-6 text-brand-mustard" /> Editar Producto
+            <Tag className="h-6 w-6 text-brand-mustard" /> {isNew ? 'Nuevo Producto' : 'Editar Producto'}
           </h2>
           <button
             onClick={onClose}
@@ -99,12 +109,18 @@ export default function ProductEditModal({ product, categories, onSave, onClose 
               <ImagePlus className="h-3.5 w-3.5" /> Imagen
             </label>
             <div className="flex gap-3">
-              <img
-                src={imageUrl}
-                alt="Vista previa"
-                className="h-24 w-24 shrink-0 rounded-xl border border-purple-500/25 object-cover"
-                onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0.3'; }}
-              />
+              {imageUrl ? (
+                <img
+                  src={imageUrl}
+                  alt="Vista previa"
+                  className="h-24 w-24 shrink-0 rounded-xl border border-purple-500/25 object-cover"
+                  onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0.3'; }}
+                />
+              ) : (
+                <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-xl border border-dashed border-white/20 bg-white/5">
+                  <ImagePlus className="h-6 w-6 text-slate-500" />
+                </div>
+              )}
               <div className="flex flex-1 flex-col gap-2">
                 <input
                   value={imageUrl}
@@ -199,7 +215,8 @@ export default function ProductEditModal({ product, categories, onSave, onClose 
             </button>
             <button
               onClick={handleSave}
-              className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-gradient-to-br from-brand-mustard to-brand-mustard-dark px-5 text-sm font-bold text-base-950 shadow-lg shadow-brand-mustard/20 transition hover:scale-[1.02] active:scale-95"
+              disabled={!isSupabaseConfigured}
+              className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-gradient-to-br from-brand-mustard to-brand-mustard-dark px-5 text-sm font-bold text-base-950 shadow-lg shadow-brand-mustard/20 transition hover:scale-[1.02] active:scale-95 disabled:opacity-60"
             >
               <Save className="h-5 w-5" /> Guardar Cambios
             </button>

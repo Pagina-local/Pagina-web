@@ -24,7 +24,7 @@ const notConfiguredMessage =
   'La base de datos no está configurada en esta instalación. Falta VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY en la compilación.';
 
 export const supabase: SupabaseClient = isSupabaseConfigured
-  ? createClient(url, anonKey, { auth: { persistSession: false } })
+  ? createClient(url, anonKey)
   : (new Proxy({} as SupabaseClient, {
       get() {
         // Chainable no-op: every call returns another no-op that awaits to a
