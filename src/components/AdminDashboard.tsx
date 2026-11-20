@@ -1,15 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
   Lock, LogOut, Eye, EyeOff, Trash2, Star, Package, MessageSquare, Check, X, Search,
-  Pencil, Save, ImagePlus, RotateCcw, Loader2, Tag, DollarSign, FileText, FolderTree, Store, Plus,
+  Pencil, Save, ImagePlus, RotateCcw, Loader2, Tag, DollarSign, FileText, FolderTree,
 } from 'lucide-react';
-import type { Product, Review, Category, Promotion, StoreSettings } from '@/types';
+import type { Product, Review, Category, Promotion } from '@/types';
 import { supabase } from '@/lib/supabase';
 import { formatCOP, formatDate } from '@/lib/utils';
-import { saveProductEdit, resetAllOverrides, clearProductOverride } from '@/lib/productStore';
+import { saveProductEdit, resetAllOverrides } from '@/lib/productStore';
 import ProductEditModal from './ProductEditModal';
 import PromotionTab from './PromotionTab';
-import SettingsTab from './SettingsTab';
 
 interface AdminDashboardProps {
   open: boolean;
@@ -21,26 +20,22 @@ interface AdminDashboardProps {
   onProductsChange: (products: Product[]) => void;
   onReviewsChange: (reviews: Review[]) => void;
   onPromotionChange: (promotion: Promotion) => void;
-  settings: StoreSettings;
-  onSettingsChange: (settings: StoreSettings) => void;
 }
 
 const ADMIN_PASSWORD = 'UNIVERSO22*';
 
 export default function AdminDashboard({
-  open, onClose, products, categories, reviews, promotion, onProductsChange, onReviewsChange, onPromotionChange, settings, onSettingsChange,
+  open, onClose, products, categories, reviews, promotion, onProductsChange, onReviewsChange, onPromotionChange,
 }: AdminDashboardProps) {
   const [authed, setAuthed] = useState(false);
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [authError, setAuthError] = useState(false);
-  const [tab, setTab] = useState<'products' | 'reviews' | 'promotions' | 'settings'>('products');
+  const [tab, setTab] = useState<'products' | 'reviews' | 'promotions'>('products');
   const [search, setSearch] = useState('');
   const [busy, setBusy] = useState<string | null>(null);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [creatingProduct, setCreatingProduct] = useState(false);
   const [resetFlash, setResetFlash] = useState(false);
-  const [actionError, setActionError] = useState<string | null>(null);
 
   useEffect(() => {
     if (open) {
@@ -49,8 +44,6 @@ export default function AdminDashboard({
       setTab('products');
       setSearch('');
       setEditingProduct(null);
-      setCreatingProduct(false);
-      setActionError(null);
     }
   }, [open]);
 
@@ -87,51 +80,13 @@ export default function AdminDashboard({
     setBusy(product.id);
     const next = { ...product, available: !product.available };
     applyProductUpdate(next);
-    supabase.from('products').update({ available: next.available }).eq('id', product.id)
-      .then(
-        ({ error }) => {
-          if (error) {
-            applyProductUpdate(product);
-            setActionError(`No se pudo actualizar la disponibilidad: ${error.message}`);
-          }
-        },
-        (err: unknown) => {
-          applyProductUpdate(product);
-          const reason = err instanceof Error && err.message ? err.message : 'Error desconocido';
-          setActionError(`No se pudo actualizar la disponibilidad: ${reason}`);
-        },
-      );
-    setBusy(null);
+    void supabase.from('products').update({ available: next.available }).eq('id', product.id)
+      .then(() => setBusy(null));
   };
 
   const handleSaveEdit = (updated: Product) => {
     applyProductUpdate(updated);
     setEditingProduct(null);
-    setCreatingProduct(false);
-  };
-
-  const handleCreateProduct = async (created: Product) => {
-    onProductsChange([...products, created]);
-    setCreatingProduct(false);
-  };
-
-  const deleteProduct = async (product: Product) => {
-    if (!confirm(`¿Eliminar "${product.name}" del menú? Esta acción no se puede deshacer.`)) return;
-    setActionError(null);
-    setBusy(product.id);
-    const previous = products;
-    onProductsChange(products.filter((p) => p.id !== product.id));
-    try {
-      const { error: dbErr } = await supabase.from('products').delete().eq('id', product.id);
-      if (dbErr) throw dbErr;
-      clearProductOverride(product.id);
-    } catch (e) {
-      onProductsChange(previous);
-      const reason = e instanceof Error && e.message ? e.message : 'Error desconocido';
-      setActionError(`No se pudo eliminar "${product.name}": ${reason}`);
-    } finally {
-      setBusy(null);
-    }
   };
 
   const handleResetAll = () => {
@@ -144,23 +99,19 @@ export default function AdminDashboard({
 
   const setReviewStatus = async (id: string, status: 'approved' | 'hidden') => {
     setBusy(id);
-    try {
-      const { error } = await supabase.from('reviews').update({ status }).eq('id', id);
-      if (!error) onReviewsChange(reviews.map((r) => (r.id === id ? { ...r, status } : r)));
-    } finally {
-      setBusy(null);
-    }
+    const { error } = await supabase.from('reviews').update({ status }).eq('id', id);
+    setBusy(null);
+    if (error) return;
+    onReviewsChange(reviews.map((r) => (r.id === id ? { ...r, status } : r)));
   };
 
   const deleteReview = async (id: string) => {
     if (!confirm('¿Eliminar esta reseña y su foto de forma permanente?')) return;
     setBusy(id);
-    try {
-      const { error } = await supabase.from('reviews').delete().eq('id', id);
-      if (!error) onReviewsChange(reviews.filter((r) => r.id !== id));
-    } finally {
-      setBusy(null);
-    }
+    const { error } = await supabase.from('reviews').delete().eq('id', id);
+    setBusy(null);
+    if (error) return;
+    onReviewsChange(reviews.filter((r) => r.id !== id));
   };
 
   const categoryName = (id: string) => categories.find((c) => c.id === id)?.name ?? '—';
@@ -241,7 +192,6 @@ export default function AdminDashboard({
             <TabBtn active={tab === 'products'} onClick={() => setTab('products')} icon={Package} label={`Productos (${products.length})`} />
             <TabBtn active={tab === 'reviews'} onClick={() => setTab('reviews')} icon={MessageSquare} label={`Reseñas (${reviews.length})`} />
             <TabBtn active={tab === 'promotions'} onClick={() => setTab('promotions')} icon={Tag} label="Promociones" />
-            <TabBtn active={tab === 'settings'} onClick={() => setTab('settings')} icon={Store} label="Configuración" />
           </div>
 
           {tab === 'products' && (
@@ -256,20 +206,12 @@ export default function AdminDashboard({
                     className="w-full rounded-xl border border-purple-500/25 bg-white/5 py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:border-brand-mustard/50 focus:outline-none"
                   />
                 </div>
-                <div className="flex shrink-0 items-center gap-2">
-                  <button
-                    onClick={() => setCreatingProduct(true)}
-                    className="flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-br from-brand-mustard to-brand-mustard-dark px-4 py-2.5 text-sm font-bold text-base-950 transition hover:scale-[1.02] active:scale-95"
-                  >
-                    <Plus className="h-4 w-4" /> Agregar
-                  </button>
-                  <button
-                    onClick={handleResetAll}
-                    className="flex items-center justify-center gap-1.5 rounded-xl border border-purple-500/25 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white"
-                  >
-                    <RotateCcw className="h-4 w-4" /> Restaurar
-                  </button>
-                </div>
+                <button
+                  onClick={handleResetAll}
+                  className="flex shrink-0 items-center justify-center gap-1.5 rounded-xl border border-purple-500/25 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white"
+                >
+                  <RotateCcw className="h-4 w-4" /> Restaurar
+                </button>
               </div>
 
               {resetFlash && (
@@ -278,23 +220,15 @@ export default function AdminDashboard({
                 </p>
               )}
 
-              {actionError && (
-                <p className="mb-3 animate-slide-up rounded-xl bg-brand-red/15 px-4 py-2 text-xs text-brand-red-light">
-                  {actionError}
-                </p>
-              )}
-
               <div className="space-y-2">
                 {filteredProducts.map((p) => (
-                  <div key={p.id} className="rounded-2xl border border-purple-500/25 bg-base-900 p-3">
-                    <div className="flex items-center gap-3">
-                      <img src={p.image_url} alt={p.name} className="h-14 w-14 shrink-0 rounded-xl object-cover" />
-                      <div className="min-w-0 flex-1">
-                        <p className="break-words font-semibold text-white">{p.name}</p>
-                        <p className="text-xs text-slate-400">{categoryName(p.category_id)} · {formatCOP(p.base_price)}</p>
-                      </div>
+                  <div key={p.id} className="flex flex-wrap items-center gap-3 rounded-2xl border border-purple-500/25 bg-base-900 p-3 sm:flex-nowrap">
+                    <img src={p.image_url} alt={p.name} className="h-14 w-14 shrink-0 rounded-xl object-cover" />
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-semibold text-white">{p.name}</p>
+                      <p className="truncate text-xs text-slate-400">{categoryName(p.category_id)} · {formatCOP(p.base_price)}</p>
                     </div>
-                    <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-white/5 pt-3">
+                    <div className="flex shrink-0 items-center gap-2">
                       <button
                         onClick={() => setEditingProduct(p)}
                         className="flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-2 text-xs font-bold text-white transition hover:bg-brand-mustard/15 hover:text-brand-mustard-light"
@@ -313,14 +247,6 @@ export default function AdminDashboard({
                         {p.available ? <Check className="h-3.5 w-3.5" /> : <X className="h-3.5 w-3.5" />}
                         {p.available ? 'Disponible' : 'Agotado'}
                       </button>
-                      <button
-                        onClick={() => deleteProduct(p)}
-                        disabled={busy === p.id}
-                        className="ml-auto flex items-center gap-1.5 rounded-full bg-brand-red/15 px-3 py-2 text-xs font-bold text-brand-red-light transition hover:bg-brand-red/25 disabled:opacity-50"
-                        aria-label={`Eliminar ${p.name}`}
-                      >
-                        {busy === p.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
-                      </button>
                     </div>
                   </div>
                 ))}
@@ -331,8 +257,6 @@ export default function AdminDashboard({
           {tab === 'promotions' && (
             <PromotionTab promotion={promotion} products={products} onPromotionChange={onPromotionChange} />
           )}
-
-          {tab === 'settings' && <SettingsTab settings={settings} onSettingsChange={onSettingsChange} />}
 
           {tab === 'reviews' && (
             <div className="animate-fade-in space-y-3">
@@ -395,13 +319,13 @@ export default function AdminDashboard({
         </div>
       )}
 
-      {/* Edit / Create modal */}
-      {(editingProduct || creatingProduct) && (
+      {/* Edit modal */}
+      {editingProduct && (
         <ProductEditModal
           product={editingProduct}
           categories={categories}
-          onSave={creatingProduct ? handleCreateProduct : handleSaveEdit}
-          onClose={() => { setEditingProduct(null); setCreatingProduct(false); }}
+          onSave={handleSaveEdit}
+          onClose={() => setEditingProduct(null)}
         />
       )}
     </div>

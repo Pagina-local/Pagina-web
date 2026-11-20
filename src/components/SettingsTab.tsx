@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
   Store, Image as ImageIcon, ImagePlus, Phone, Save, Loader2, RotateCcw,
-  Type, Sparkles, Check, Link, Instagram, Music2, MapPin,
+  Type, Sparkles, Check,
 } from 'lucide-react';
 import type { StoreSettings } from '@/types';
 import { supabase } from '@/lib/supabase';
@@ -18,15 +18,10 @@ export default function SettingsTab({ settings, onSettingsChange }: SettingsTabP
   const [logoType, setLogoType] = useState<'icon' | 'image'>(settings.logo_type);
   const [logoUrl, setLogoUrl] = useState(settings.logo_url);
   const [whatsappNumber, setWhatsappNumber] = useState(settings.whatsapp_number);
-  const [instagramUrl, setInstagramUrl] = useState(settings.instagram_url);
-  const [tiktokUrl, setTiktokUrl] = useState(settings.tiktok_url);
-  const [locationUrl, setLocationUrl] = useState(settings.location_url);
-  const [locationLabel, setLocationLabel] = useState(settings.location_label);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
-  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     setStoreName(settings.store_name);
@@ -34,10 +29,6 @@ export default function SettingsTab({ settings, onSettingsChange }: SettingsTabP
     setLogoType(settings.logo_type);
     setLogoUrl(settings.logo_url);
     setWhatsappNumber(settings.whatsapp_number);
-    setInstagramUrl(settings.instagram_url);
-    setTiktokUrl(settings.tiktok_url);
-    setLocationUrl(settings.location_url);
-    setLocationLabel(settings.location_label);
   }, [settings]);
 
   const handleUpload = async (file: File) => {
@@ -64,16 +55,12 @@ export default function SettingsTab({ settings, onSettingsChange }: SettingsTabP
     }
   };
 
-  const handleSave = async () => {
+  const handleSave = () => {
     setError(null);
     const trimmedName = storeName.trim();
     if (!trimmedName) return setError('El nombre del local es obligatorio.');
     const trimmedPhone = whatsappNumber.replace(/\D/g, '');
     if (!trimmedPhone) return setError('El número de WhatsApp es obligatorio.');
-    const trimmedLocationUrl = locationUrl.trim();
-    const trimmedLocationLabel = locationLabel.trim();
-    if (!trimmedLocationUrl) return setError('El enlace de Google Maps es obligatorio.');
-    if (!trimmedLocationLabel) return setError('La dirección es obligatoria.');
 
     const updated: StoreSettings = {
       ...settings,
@@ -82,23 +69,8 @@ export default function SettingsTab({ settings, onSettingsChange }: SettingsTabP
       logo_type: logoType,
       logo_url: logoUrl.trim(),
       whatsapp_number: trimmedPhone,
-      instagram_url: instagramUrl.trim(),
-      tiktok_url: tiktokUrl.trim(),
-      location_url: trimmedLocationUrl,
-      location_label: trimmedLocationLabel,
     };
     saveSettings(updated);
-    setSaving(true);
-    const { error: syncError } = await supabase
-      .from('store_settings')
-      .update({
-        whatsapp_number: updated.whatsapp_number,
-        location_url: updated.location_url,
-        location_label: updated.location_label,
-      })
-      .eq('id', settings.id);
-    setSaving(false);
-    if (syncError) return setError('No se pudo sincronizar la ubicación. Intenta guardar de nuevo.');
     onSettingsChange(updated);
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
@@ -113,10 +85,6 @@ export default function SettingsTab({ settings, onSettingsChange }: SettingsTabP
     setLogoType(original.logo_type);
     setLogoUrl(original.logo_url);
     setWhatsappNumber(original.whatsapp_number);
-    setInstagramUrl(original.instagram_url);
-    setTiktokUrl(original.tiktok_url);
-    setLocationUrl(original.location_url);
-    setLocationLabel(original.location_label);
   };
 
   const inputCls = 'w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder-slate-500 transition focus:border-brand-mustard/50 focus:outline-none';
@@ -222,52 +190,10 @@ export default function SettingsTab({ settings, onSettingsChange }: SettingsTabP
             value={whatsappNumber}
             onChange={(e) => setWhatsappNumber(e.target.value)}
             className={inputCls}
-            placeholder="Ej: 573142616195 (código de país + número)"
+            placeholder="Ej: 573001112233 (código de país + número)"
             inputMode="numeric"
           />
           <p className="mt-1 text-xs text-slate-500">Incluye el código de país sin signos. Ej: 57 para Colombia.</p>
-        </div>
-      </div>
-
-      <div className="rounded-2xl border border-white/10 bg-base-900 p-5">
-        <h3 className="flex items-center gap-2 font-display text-lg tracking-wide text-white">
-          <MapPin className="h-5 w-5 text-brand-mustard" /> Ubicación
-        </h3>
-        <p className="mt-1 text-xs text-slate-400">Esta dirección y el enlace de Google Maps aparecen en el pie de página.</p>
-        <div className="mt-4 space-y-4">
-          <div>
-            <label className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-400">
-              <MapPin className="h-3.5 w-3.5" /> Dirección visible
-            </label>
-            <input value={locationLabel} onChange={(e) => setLocationLabel(e.target.value)} className={inputCls} placeholder="Plato, Magdalena (CP 475030)" />
-          </div>
-          <div>
-            <label className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-400">
-              <Link className="h-3.5 w-3.5" /> Enlace de Google Maps
-            </label>
-            <input value={locationUrl} onChange={(e) => setLocationUrl(e.target.value)} className={inputCls} placeholder="https://maps.app.goo.gl/..." />
-          </div>
-        </div>
-      </div>
-
-      <div className="rounded-2xl border border-white/10 bg-base-900 p-5">
-        <h3 className="flex items-center gap-2 font-display text-lg tracking-wide text-white">
-          <Link className="h-5 w-5 text-brand-mustard" /> Redes Sociales
-        </h3>
-        <p className="mt-1 text-xs text-slate-400">Estos enlaces aparecen en el pie de página y se abren en una pestaña nueva.</p>
-        <div className="mt-4 space-y-4">
-          <div>
-            <label className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-400">
-              <Instagram className="h-3.5 w-3.5" /> Instagram
-            </label>
-            <input value={instagramUrl} onChange={(e) => setInstagramUrl(e.target.value)} className={inputCls} placeholder="https://www.instagram.com/..." />
-          </div>
-          <div>
-            <label className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-400">
-              <Music2 className="h-3.5 w-3.5" /> TikTok
-            </label>
-            <input value={tiktokUrl} onChange={(e) => setTiktokUrl(e.target.value)} className={inputCls} placeholder="https://www.tiktok.com/..." />
-          </div>
         </div>
       </div>
 
@@ -288,11 +214,10 @@ export default function SettingsTab({ settings, onSettingsChange }: SettingsTabP
         </button>
         <button
           onClick={handleSave}
-          disabled={saving}
-          className="flex flex-1 items-center justify-center gap-2 rounded-full bg-gradient-to-br from-brand-mustard to-brand-mustard-dark px-5 py-3 text-sm font-bold text-base-950 shadow-lg shadow-brand-mustard/20 transition hover:scale-[1.02] active:scale-95 disabled:cursor-wait disabled:opacity-70"
+          className="flex flex-1 items-center justify-center gap-2 rounded-full bg-gradient-to-br from-brand-mustard to-brand-mustard-dark px-5 py-3 text-sm font-bold text-base-950 shadow-lg shadow-brand-mustard/20 transition hover:scale-[1.02] active:scale-95"
         >
           {saved ? <Check className="h-5 w-5" /> : <Save className="h-5 w-5" />}
-          {saving ? 'Sincronizando...' : saved ? '¡Guardado!' : 'Guardar Configuración'}
+          {saved ? '¡Guardado!' : 'Guardar Configuración'}
         </button>
       </div>
     </div>

@@ -219,7 +219,7 @@ export const fallbackProducts: Product[] = [
 
 export const fallbackSettings: StoreSettings = {
   id: 1,
-  whatsapp_number: '573142616195',
+  whatsapp_number: '573001112233',
   delivery_fee: 5000,
   promo_title: 'Combo del Día: 2x1 en Combos Clásicos',
   promo_subtitle: 'Solo por hoy, llevá dos combos al precio de uno. ¡Pedí antes de las 9pm!',
@@ -228,8 +228,4 @@ export const fallbackSettings: StoreSettings = {
   tagline: 'Sabor de otro planeta',
   logo_url: '',
   logo_type: 'icon',
-  instagram_url: 'https://www.instagram.com/universo22.fastfood?fqnt=MXd0MXIxY3AxMHdwNQ%3D%3D&utm_source=qr',
-  tiktok_url: 'https://www.tiktok.com/@universo.2244?_r=1&_t=ZS-9BWVPLkjJH6',
-  location_url: 'https://maps.app.goo.gl/bzABoLhTwDbN7VgL8',
-  location_label: 'Plato, Magdalena (CP 475030)',
 };

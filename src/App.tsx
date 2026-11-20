@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
 import { CartProvider, useCart } from '@/context/CartContext';
 import { fallbackCategories } from '@/lib/fallbackData';
 import { getMergedProducts } from '@/lib/productStore';
@@ -19,7 +19,7 @@ import AdminDashboard from '@/components/AdminDashboard';
 import BottomNav from '@/components/BottomNav';
 import Toast from '@/components/Toast';
 import PromotionModal from '@/components/PromotionModal';
-import { Truck, Instagram, Clock, MapPin, MessageCircle, Music2 } from 'lucide-react';
+import { Truck, Instagram, Facebook, Clock, MapPin, MessageCircle } from 'lucide-react';
 
 function StoreApp() {
   const { totalItems } = useCart();
@@ -43,7 +43,7 @@ function StoreApp() {
   const [toast, setToast] = useState<string | null>(null);
 
   const loadData = useCallback(async () => {
-    if (!supabase || !isSupabaseConfigured) return;
+    if (!supabase) return;
     try {
       const [catRes, prodRes, revRes, setRes] = await Promise.all([
         supabase.from('categories').select('*').order('sort_order'),
@@ -80,7 +80,7 @@ function StoreApp() {
 
   useEffect(() => { loadData(); }, [loadData]);
 
-  const promotionProduct = products.find((product) => product.id === promotion.productId) ?? products.find((product) => product.available) ?? products[0];
+  const promotionProduct = products.find((product) => product.id === promotion.productId);
 
   useEffect(() => {
     if (!promotion.active || promotionOpen || promotionHandled || promotionSuppressed || adminOpen || !promotionProduct) return;
@@ -126,7 +126,7 @@ function StoreApp() {
   }, []);
 
   const deliveryFee = settings?.delivery_fee ?? 5000;
-  const whatsappNumber = settings?.whatsapp_number ?? '573142616195';
+  const whatsappNumber = settings?.whatsapp_number ?? '573001112233';
 
   return (
     <div className="min-h-screen bg-base-950 pb-20 lg:pb-0">
@@ -226,8 +226,6 @@ function StoreApp() {
         onProductsChange={setProducts}
         onReviewsChange={setReviews}
         onPromotionChange={handlePromotionChange}
-        settings={settings ?? getMergedSettings()}
-        onSettingsChange={setSettings}
       />
 
       <BottomNav
@@ -282,10 +280,6 @@ function Footer({ settings }: { settings: StoreSettings | null }) {
   const tagline = settings?.tagline ?? 'Sabor de otro planeta';
   const logoUrl = settings?.logo_url ?? '';
   const logoType = settings?.logo_type ?? 'icon';
-  const instagramUrl = settings?.instagram_url ?? 'https://www.instagram.com/universo22.fastfood?fqnt=MXd0MXIxY3AxMHdwNQ%3D%3D&utm_source=qr';
-  const tiktokUrl = settings?.tiktok_url ?? 'https://www.tiktok.com/@universo.2244?_r=1&_t=ZS-9BWVPLkjJH6';
-  const locationUrl = settings?.location_url ?? 'https://maps.app.goo.gl/bzABoLhTwDbN7VgL8';
-  const locationLabel = settings?.location_label ?? 'Plato, Magdalena (CP 475030)';
   return (
     <footer className="border-t border-purple-500/25 bg-base-900">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -306,13 +300,13 @@ function Footer({ settings }: { settings: StoreSettings | null }) {
               Comida rápida urbana hecha con ingredientes frescos. Hamburguesas a la parrilla, salchipapas crujientes y combos para compartir.
             </p>
             <div className="mt-5 flex gap-3">
-              <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="flex h-9 w-9 items-center justify-center rounded-full border border-brand-purple/30 bg-brand-purple/10 text-brand-purple-light transition hover:border-brand-purple hover:bg-brand-purple/25 hover:text-white" aria-label="Instagram">
+              <a href="#" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-slate-300 transition hover:bg-white/10 hover:text-white" aria-label="Instagram">
                 <Instagram className="h-4 w-4" />
               </a>
-              <a href={tiktokUrl} target="_blank" rel="noopener noreferrer" className="flex h-9 w-9 items-center justify-center rounded-full border border-brand-indigo/30 bg-brand-indigo/10 text-brand-purple-light transition hover:border-brand-indigo hover:bg-brand-indigo/25 hover:text-white" aria-label="TikTok">
-                <Music2 className="h-4 w-4" />
+              <a href="#" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-slate-300 transition hover:bg-white/10 hover:text-white" aria-label="Facebook">
+                <Facebook className="h-4 w-4" />
               </a>
-              <a href={`https://wa.me/${settings?.whatsapp_number ?? '573142616195'}`} target="_blank" rel="noopener noreferrer" className="flex h-9 w-9 items-center justify-center rounded-full border border-green-500/30 bg-green-500/10 text-green-300 transition hover:border-green-500 hover:bg-green-500/25 hover:text-white" aria-label="WhatsApp">
+              <a href="#" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-slate-300 transition hover:bg-white/10 hover:text-white" aria-label="WhatsApp">
                 <MessageCircle className="h-4 w-4" />
               </a>
             </div>
@@ -328,13 +322,10 @@ function Footer({ settings }: { settings: StoreSettings | null }) {
 
           <div>
             <h4 className="font-semibold text-white">Ubicación</h4>
-            <div className="mt-3 space-y-3 text-sm text-slate-400">
-              <p className="flex items-start gap-2"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-mustard" /> {locationLabel}</p>
-              <p className="flex items-center gap-2"><Truck className="h-4 w-4 shrink-0 text-brand-mustard" /> Domicilio a toda la ciudad</p>
-              <a href={locationUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full border border-brand-mustard/30 bg-brand-mustard/10 px-3 py-2 text-xs font-semibold text-brand-mustard-light transition hover:border-brand-mustard hover:bg-brand-mustard/20">
-                <MapPin className="h-3.5 w-3.5" /> Ver indicaciones
-              </a>
-            </div>
+            <ul className="mt-3 space-y-2 text-sm text-slate-400">
+              <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-brand-mustard" /> Cra 45 # 12-34, Centro</li>
+              <li className="flex items-center gap-2"><Truck className="h-4 w-4 text-brand-mustard" /> Domicilio a toda la ciudad</li>
+            </ul>
           </div>
         </div>
 

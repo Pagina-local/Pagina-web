@@ -1,56 +1,12 @@
-import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 
-/**
- * Runtime config: universo22.lat can inject the credentials at page load
- * (before this module runs) via window.__SUPABASE_CONFIG__ when no build-time
- * env vars were baked into the bundle.
- */
-declare global {
-  interface Window {
-    __SUPABASE_CONFIG__?: { url?: string; anonKey?: string };
-  }
+const url = import.meta.env.VITE_SUPABASE_URL;
+const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+if (!url || !anonKey) {
+  console.error('Supabase env vars missing. Check .env for VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY');
 }
 
-const url = import.meta.env.VITE_SUPABASE_URL
-  || (typeof window !== 'undefined' ? window.__SUPABASE_CONFIG__?.url : undefined)
-  || '';
-const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-  || (typeof window !== 'undefined' ? window.__SUPABASE_CONFIG__?.anonKey : undefined)
-  || '';
-
-export const isSupabaseConfigured = Boolean(url && anonKey);
-
-const notConfiguredMessage = 'La base de datos no está configurada en esta instalación. Falta VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY en la compilación.';
-
-export const supabase: SupabaseClient = isSupabaseConfigured
+export const supabase = url && anonKey
   ? createClient(url, anonKey, { auth: { persistSession: false } })
-  : (new Proxy({} as SupabaseClient, {
-      get() {
-        // Chainable no-op: every call returns another no-op that awaits to a
-        // controlled error result, never a TypeError crash.
-        const noop: unknown = new Proxy(function () {}, {
-          get(_t, prop) {
-            if (prop === 'then') {
-              return (resolve: (v: unknown) => void) => resolve({
-                data: null,
-                error: { message: notConfiguredMessage, code: 'SUPABASE_NOT_CONFIGURED' },
-                error_code: 'SUPABASE_NOT_CONFIGURED',
-              });
-            }
-            return () => noop;
-          },
-          apply() {
-            return noop;
-          },
-        });
-        return noop;
-      },
-    }) as unknown as SupabaseClient);
-
-if (!isSupabaseConfigured) {
-  console.error(
-    'Supabase env vars missing. The site will run with fallback data and saving/deleting will not persist. '
-    + 'Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY at build time (GitHub Actions secrets) '
-    + 'or via window.__SUPABASE_CONFIG__ before the bundle loads.',
-  );
-}
+  : null as unknown as ReturnType<typeof createClient>;

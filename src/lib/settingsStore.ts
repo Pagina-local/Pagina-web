@@ -40,10 +40,6 @@ export function saveSettings(settings: StoreSettings): void {
     promo_title: settings.promo_title,
     promo_subtitle: settings.promo_subtitle,
     promo_badge: settings.promo_badge,
-    instagram_url: settings.instagram_url,
-    tiktok_url: settings.tiktok_url,
-    location_url: settings.location_url,
-    location_label: settings.location_label,
   });
 }
 
