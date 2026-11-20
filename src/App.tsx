@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
 import { CartProvider, useCart } from '@/context/CartContext';
 import { fallbackCategories } from '@/lib/fallbackData';
 import { getMergedProducts } from '@/lib/productStore';
@@ -43,7 +43,7 @@ function StoreApp() {
   const [toast, setToast] = useState<string | null>(null);
 
   const loadData = useCallback(async () => {
-    if (!supabase || !isSupabaseConfigured) return;
+    if (!supabase) return;
     try {
       const [catRes, prodRes, revRes, setRes] = await Promise.all([
         supabase.from('categories').select('*').order('sort_order'),
@@ -224,7 +224,6 @@ function StoreApp() {
         reviews={reviews}
         promotion={promotion}
         onProductsChange={setProducts}
-        onCategoriesChange={setCategories}
         onReviewsChange={setReviews}
         onPromotionChange={handlePromotionChange}
       />
